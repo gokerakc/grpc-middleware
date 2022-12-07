@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option csharp_namespace = "MiddlewareGrpcService";
+option csharp_namespace = "Starfish.GrpcServices";
 
 package greet;
 

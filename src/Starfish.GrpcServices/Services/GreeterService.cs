@@ -1,7 +1,6 @@
 using Grpc.Core;
-using MiddlewareGrpcService;
 
-namespace MiddlewareGrpcService.Services;
+namespace Starfish.GrpcServices.Services;
 
 public class GreeterService : Greeter.GreeterBase
 {

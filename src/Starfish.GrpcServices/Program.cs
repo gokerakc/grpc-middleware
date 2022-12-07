@@ -1,4 +1,4 @@
-using MiddlewareGrpcService.Services;
+using Starfish.GrpcServices.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

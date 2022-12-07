@@ -1,4 +1,4 @@
-namespace SampleWebApp.Tests;
+namespace Starfish.Tests;
 
 public class UnitTest1
 {

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace SampleWebApp.Controllers;
+namespace Starfish.Web.Controllers;
 
 [ApiController]
 [Route("[controller]")]

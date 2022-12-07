@@ -1,4 +1,4 @@
-namespace SampleWebApp;
+namespace Starfish.Web;
 
 public class WeatherForecast
 {
