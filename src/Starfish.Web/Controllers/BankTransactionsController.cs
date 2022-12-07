@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Starfish.Core.Models;
 
 namespace Starfish.Web.Controllers;
 
@@ -14,8 +15,8 @@ public class BankTransactionsController : ControllerBase
     }
 
     [HttpGet(Name = "GetBankTransactions")]
-    public ActionResult<IEnumerable<object>> Get()
+    public ActionResult<IEnumerable<BankTransaction>> Get()
     {
-        return Ok(Array.Empty<object>());
+        return Ok(Enumerable.Empty<BankTransaction>());
     }
 }

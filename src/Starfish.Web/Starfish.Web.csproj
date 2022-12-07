@@ -12,7 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Data" />
+      <ProjectReference Include="..\Starfish.Core\Starfish.Core.csproj" />
     </ItemGroup>
 
 </Project>
