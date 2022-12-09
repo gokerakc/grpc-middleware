@@ -4,9 +4,9 @@ public class BankTransaction
 {
     public Guid Id { get; set; }
     
-    public string Source { get; set; } = null!;
+    public required string Source { get; set; }
     
-    public string Target { get; set; } = null!;
+    public required string Target { get; set; }
     
     public decimal Amount { get; set; }
     

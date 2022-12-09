@@ -2,11 +2,11 @@
 
 public class BankAccount
 {
-    public string AccountNumber { get; set; } = null!;
+    public Guid Id { get; set; }
     
-    public string AccountName { get; set; } = null!;
+    public required string AccountNumber { get; set; }
+    
+    public required string AccountName { get; set; }
     
     public decimal Balance { get; set; }
-
-    public List<BankTransaction> Transactions { get; set; } = new List<BankTransaction>();
 }
