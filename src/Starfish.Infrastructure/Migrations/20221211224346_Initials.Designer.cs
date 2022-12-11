@@ -12,8 +12,8 @@ using Starfish.Infrastructure.Data;
 namespace Starfish.Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20221209170310_Initial")]
-    partial class Initial
+    [Migration("20221211224346_Initials")]
+    partial class Initials
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -62,13 +62,11 @@ namespace Starfish.Infrastructure.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Source")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("SourceId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Target")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("TargetId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");

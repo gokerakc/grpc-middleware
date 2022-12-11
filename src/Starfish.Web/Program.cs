@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
 using Starfish.Core.Models;
 using Starfish.Core.Services;
@@ -19,7 +20,6 @@ builder.Services.AddScoped<IRepository<BankAccount>, BankAccountsRepository>();
 builder.Services.AddScoped<IRepository<BankTransaction>, BankTransactionsRepository>();
 builder.Services.AddScoped<IBankAccountsService, BankAccountsService>();
 builder.Services.AddScoped<IBankTransactionsService, BankTransactionsService>();
-
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<DataContext>(options =>

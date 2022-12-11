@@ -10,9 +10,5 @@ public interface IBankAccountsService
     
     public Task Add(BankAccount account, CancellationToken ctx);
     
-    public Task Add(IEnumerable<BankAccount> accounts, CancellationToken ctx);
-    
     public Task Delete(Guid id, CancellationToken ctx);
-    
-    public Task Delete(List<Guid> ids, CancellationToken ctx);
 }

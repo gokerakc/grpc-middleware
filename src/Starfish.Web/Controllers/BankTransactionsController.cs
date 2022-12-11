@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Starfish.Core.Models;
 using Starfish.Core.Services;
 
-namespace Starfish.Web.BankTransactions;
+namespace Starfish.Web.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("bank-transactions")]
 public class BankTransactionsController : ControllerBase
 {
     private readonly IBankTransactionsService _bankTransactionsService;
@@ -22,7 +22,7 @@ public class BankTransactionsController : ControllerBase
     /// Get all bank transaction list
     /// <param name="ctx">Cancellation token</param>
     /// </summary>
-    [HttpGet(Name = "GetBankTransactions")]
+    [HttpGet]
     public async Task<ActionResult<IEnumerable<BankTransaction>>> GetAll(CancellationToken ctx)
     {
         var transactions = await _bankTransactionsService.GetAll(ctx);
@@ -34,8 +34,7 @@ public class BankTransactionsController : ControllerBase
     /// <param name="id">Bank transaction id</param>
     /// <param name="ctx">Cancellation token</param>
     /// </summary>
-    [HttpGet(Name = "GetBankTransaction")]
-    [Route("/{id:guid}")]
+    [HttpGet("{id:guid}")]
     public async Task<ActionResult<IEnumerable<BankTransaction>>> Get(Guid id, CancellationToken ctx)
     {
         var transaction = await _bankTransactionsService.Get(id, ctx);
@@ -47,22 +46,10 @@ public class BankTransactionsController : ControllerBase
     /// <param name="transaction">Bank transaction details</param>
     /// <param name="ctx">Cancellation token</param>
     /// </summary>
-    [HttpPost(Name = "AddBankTransaction")]
+    [HttpPost]
     public async Task<ActionResult> Add(BankTransaction transaction, CancellationToken ctx)
     {
         await _bankTransactionsService.Add(transaction, ctx);
-        return StatusCode((int)HttpStatusCode.Created);
-    }
-    
-    /// <summary>
-    /// Add new bank transactions
-    /// <param name="transactions">List of bank bank transactions</param>
-    /// <param name="ctx">Cancellation token</param>
-    /// </summary>
-    [HttpPost(Name = "AddBankTransactions")]
-    public async Task<ActionResult> Add(List<BankTransaction> transactions, CancellationToken ctx)
-    {
-        await _bankTransactionsService.Add(transactions, ctx);
         return StatusCode((int)HttpStatusCode.Created);
     }
     
@@ -71,23 +58,10 @@ public class BankTransactionsController : ControllerBase
     /// <param name="id">Bank transaction id</param>
     /// <param name="ctx">Cancellation token</param>
     /// </summary>
-    [HttpDelete(Name = "DeleteBankTransaction")]
-    [Route("/{id:guid}")]
+    [HttpDelete("{id:guid}")]
     public async Task<ActionResult<IEnumerable<BankTransaction>>> Delete(Guid id, CancellationToken ctx)
     {
         await _bankTransactionsService.Delete(id, ctx);
-        return Ok();
-    }
-    
-    /// <summary>
-    /// Delete bank transaction by id
-    /// <param name="ids">List of bank transaction ids</param>
-    /// <param name="ctx">Cancellation token</param>
-    /// </summary>
-    [HttpDelete(Name = "DeleteBankTransactions")]
-    public async Task<ActionResult<IEnumerable<BankTransaction>>> Delete(List<Guid> ids, CancellationToken ctx)
-    {
-        await _bankTransactionsService.Delete(ids, ctx);
         return Ok();
     }
 }

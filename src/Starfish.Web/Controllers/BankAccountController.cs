@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Starfish.Core.Models;
 using Starfish.Core.Services;
 
-namespace Starfish.Web.BankAccounts;
+namespace Starfish.Web.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("bank-accounts")]
 public class BankAccountsController : ControllerBase
 {
     private readonly IBankAccountsService _bankAccountsService;
@@ -22,7 +22,7 @@ public class BankAccountsController : ControllerBase
     /// Get all account list
     /// <param name="ctx">Cancellation token</param>
     /// </summary>
-    [HttpGet(Name = "GetBankAccounts")]
+    [HttpGet]
     public async Task<ActionResult<IEnumerable<BankAccount>>> GetAll(CancellationToken ctx)
     {
         var accounts = await _bankAccountsService.GetAll(ctx);
@@ -34,8 +34,7 @@ public class BankAccountsController : ControllerBase
     /// <param name="id">Account id</param>
     /// <param name="ctx">Cancellation token</param>
     /// </summary>
-    [HttpGet(Name = "GetBankAccount")]
-    [Route("/{id:guid}")]
+    [HttpGet("{id:guid}")]
     public async Task<ActionResult<IEnumerable<BankAccount>>> Get(Guid id, CancellationToken ctx)
     {
         var account = await _bankAccountsService.Get(id, ctx);
@@ -47,22 +46,10 @@ public class BankAccountsController : ControllerBase
     /// <param name="account">Account details</param>
     /// <param name="ctx">Cancellation token</param>
     /// </summary>
-    [HttpPost(Name = "AddBankAccount")]
+    [HttpPost]
     public async Task<ActionResult> Add(BankAccount account, CancellationToken ctx)
     {
         await _bankAccountsService.Add(account, ctx);
-        return StatusCode((int)HttpStatusCode.Created);
-    }
-    
-    /// <summary>
-    /// Add new accounts
-    /// <param name="accounts">List of bank accounts</param>
-    /// <param name="ctx">Cancellation token</param>
-    /// </summary>
-    [HttpPost(Name = "AddBankAccounts")]
-    public async Task<ActionResult> Add(List<BankAccount> accounts, CancellationToken ctx)
-    {
-        await _bankAccountsService.Add(accounts, ctx);
         return StatusCode((int)HttpStatusCode.Created);
     }
     
@@ -71,23 +58,10 @@ public class BankAccountsController : ControllerBase
     /// <param name="id">Account id</param>
     /// <param name="ctx">Cancellation token</param>
     /// </summary>
-    [HttpDelete(Name = "DeleteBankAccount")]
-    [Route("/{id:guid}")]
+    [HttpDelete("{id:guid}")]
     public async Task<ActionResult<IEnumerable<BankAccount>>> Delete(Guid id, CancellationToken ctx)
     {
         await _bankAccountsService.Delete(id, ctx);
-        return Ok();
-    }
-    
-    /// <summary>
-    /// Delete account by id
-    /// <param name="ids">List of account ids</param>
-    /// <param name="ctx">Cancellation token</param>
-    /// </summary>
-    [HttpDelete(Name = "DeleteBankAccounts")]
-    public async Task<ActionResult<IEnumerable<BankAccount>>> Delete(List<Guid> ids, CancellationToken ctx)
-    {
-        await _bankAccountsService.Delete(ids, ctx);
         return Ok();
     }
 }
