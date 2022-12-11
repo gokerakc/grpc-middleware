@@ -2,9 +2,10 @@
 
 This is just a simple .NET 7 web api project to practice new packages and APIs.
 
-Example practices:
+Includes:
 - .NET 7
 - Entity Framework 7
+- Clean architecture
 - GRPC services
 - ...
 
