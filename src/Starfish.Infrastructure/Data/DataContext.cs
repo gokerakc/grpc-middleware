@@ -21,7 +21,22 @@ public class DataContext : DbContext
             optionsBuilder.UseSqlServer("Server=localhost,1433;Database=starfish-db;User Id=sa;Password=P455w0rd; TrustServerCertificate=True");
         }
     }
-    
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<BankTransaction>()
+            .HasOne<BankAccount>()
+            .WithMany()
+            .HasForeignKey(x => x.SourceId)
+            .OnDelete(DeleteBehavior.ClientCascade);
+        
+        modelBuilder.Entity<BankTransaction>()
+            .HasOne<BankAccount>()
+            .WithMany()
+            .HasForeignKey(x => x.TargetId)
+            .OnDelete(DeleteBehavior.ClientCascade);;
+    }
+
     public DbSet<BankAccount> BankAccounts { get; set; }
     
     public DbSet<BankTransaction> BankTransactions { get; set; }

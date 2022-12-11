@@ -70,7 +70,26 @@ namespace Starfish.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("SourceId");
+
+                    b.HasIndex("TargetId");
+
                     b.ToTable("BankTransactions");
+                });
+
+            modelBuilder.Entity("Starfish.Core.Models.BankTransaction", b =>
+                {
+                    b.HasOne("Starfish.Core.Models.BankAccount", null)
+                        .WithMany()
+                        .HasForeignKey("SourceId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.HasOne("Starfish.Core.Models.BankAccount", null)
+                        .WithMany()
+                        .HasForeignKey("TargetId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

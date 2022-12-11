@@ -40,17 +40,37 @@ namespace Starfish.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_BankTransactions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BankTransactions_BankAccounts_SourceId",
+                        column: x => x.SourceId,
+                        principalTable: "BankAccounts",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_BankTransactions_BankAccounts_TargetId",
+                        column: x => x.TargetId,
+                        principalTable: "BankAccounts",
+                        principalColumn: "Id");
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BankTransactions_SourceId",
+                table: "BankTransactions",
+                column: "SourceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BankTransactions_TargetId",
+                table: "BankTransactions",
+                column: "TargetId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "BankAccounts");
+                name: "BankTransactions");
 
             migrationBuilder.DropTable(
-                name: "BankTransactions");
+                name: "BankAccounts");
         }
     }
 }
