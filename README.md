@@ -9,5 +9,11 @@ Includes:
 - GRPC services
 - ...
 
+And will include:
+- BenchmarkDotNet
+- GitHub actions
+- Docker files
+- IAC (Azure or AWS)
+
 ![project-starfish](./starfish.png "Project Starfish")
 
