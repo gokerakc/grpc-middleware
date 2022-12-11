@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using Starfish.Core.Models;
+using Starfish.Core.Services;
 using Starfish.Infrastructure.Data;
-using Starfish.Web.BankAccounts;
-using Starfish.Web.BankTransactions;
+using Starfish.Infrastructure.Repositories;
+using Starfish.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,8 +15,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Starfish injections
+builder.Services.AddScoped<IRepository<BankAccount>, BankAccountsRepository>();
+builder.Services.AddScoped<IRepository<BankTransaction>, BankTransactionsRepository>();
 builder.Services.AddScoped<IBankAccountsService, BankAccountsService>();
 builder.Services.AddScoped<IBankTransactionsService, BankTransactionsService>();
+
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<DataContext>(options =>

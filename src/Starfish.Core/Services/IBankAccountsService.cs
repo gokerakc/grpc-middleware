@@ -1,8 +1,8 @@
 ﻿using Starfish.Core.Models;
 
-namespace Starfish.Web.BankAccounts;
+namespace Starfish.Core.Services;
 
-public interface IBankAccountsService
+public interface IBankAccountsService 
 {
     public Task<List<BankAccount>> GetAll(CancellationToken ctx);
     
@@ -10,7 +10,7 @@ public interface IBankAccountsService
     
     public Task Add(BankAccount account, CancellationToken ctx);
     
-    public Task Add(List<BankAccount> accounts, CancellationToken ctx);
+    public Task Add(IEnumerable<BankAccount> accounts, CancellationToken ctx);
     
     public Task Delete(Guid id, CancellationToken ctx);
     

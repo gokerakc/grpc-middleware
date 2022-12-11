@@ -1,6 +1,6 @@
 ﻿using Starfish.Core.Models;
 
-namespace Starfish.Web.BankTransactions;
+namespace Starfish.Core.Services;
 
 public interface IBankTransactionsService
 {
@@ -10,7 +10,7 @@ public interface IBankTransactionsService
     
     public Task Add(BankTransaction transaction, CancellationToken ctx);
     
-    public Task Add(List<BankTransaction> transactions, CancellationToken ctx);
+    public Task Add(IEnumerable<BankTransaction> transactions, CancellationToken ctx);
     
     public Task Delete(Guid id, CancellationToken ctx);
     

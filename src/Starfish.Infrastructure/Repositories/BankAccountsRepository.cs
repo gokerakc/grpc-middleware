@@ -1,14 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Starfish.Core.Models;
 using Starfish.Infrastructure.Data;
+using Starfish.Shared;
 
-namespace Starfish.Web.BankAccounts;
+namespace Starfish.Infrastructure.Repositories;
 
-public class BankAccountsService : IBankAccountsService
+public class BankAccountsRepository : IRepository<BankAccount>
 {
     private readonly DataContext _context;
 
-    public BankAccountsService(DataContext context)
+    public BankAccountsRepository(DataContext context)
     {
         _context = context;
     }
@@ -33,7 +34,7 @@ public class BankAccountsService : IBankAccountsService
         await _context.SaveChangesAsync(ctx);
     }
 
-    public async Task Add(List<BankAccount> accounts, CancellationToken ctx)
+    public async Task Add(IEnumerable<BankAccount> accounts, CancellationToken ctx)
     {
         await _context.BankAccounts.AddRangeAsync(accounts, ctx);
         await _context.SaveChangesAsync(ctx);
