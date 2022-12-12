@@ -1,10 +1,10 @@
-using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
 using Starfish.Core.Models;
 using Starfish.Core.Services;
 using Starfish.Infrastructure.Data;
 using Starfish.Infrastructure.Repositories;
 using Starfish.Shared;
+using Starfish.Web.HostedServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +20,13 @@ builder.Services.AddScoped<IRepository<BankAccount>, BankAccountsRepository>();
 builder.Services.AddScoped<IRepository<BankTransaction>, BankTransactionsRepository>();
 builder.Services.AddScoped<IBankAccountsService, BankAccountsService>();
 builder.Services.AddScoped<IBankTransactionsService, BankTransactionsService>();
+
+// Starfish hosted services
+var isDevelopment = string.Equals(builder.Configuration["ASPNETCORE_ENVIRONMENT"], "Development", StringComparison.InvariantCultureIgnoreCase);
+if (isDevelopment)
+{
+    builder.Services.AddHostedService<SeedSampleDataService>();    
+}
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<DataContext>(options =>
