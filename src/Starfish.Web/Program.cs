@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Starfish.Core.Models;
 using Starfish.Core.Services;
@@ -5,6 +6,7 @@ using Starfish.Infrastructure.Data;
 using Starfish.Infrastructure.Repositories;
 using Starfish.Shared;
 using Starfish.Web.HostedServices;
+using Starfish.Web.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,11 +24,13 @@ builder.Services.AddScoped<IBankAccountsService, BankAccountsService>();
 builder.Services.AddScoped<IBankTransactionsService, BankTransactionsService>();
 
 // Starfish hosted services
-var isDevelopment = string.Equals(builder.Configuration["ASPNETCORE_ENVIRONMENT"], "Development", StringComparison.InvariantCultureIgnoreCase);
-if (isDevelopment)
+if (builder.Environment.IsDevelopment())
 {
     builder.Services.AddHostedService<SeedSampleDataService>();    
 }
+
+// Starfish middleware injections
+builder.Services.AddSingleton<ProcessTimeMiddleware>();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<DataContext>(options =>
@@ -46,6 +50,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ProcessTimeMiddleware>();
 
 app.UseHttpsRedirection();
 
