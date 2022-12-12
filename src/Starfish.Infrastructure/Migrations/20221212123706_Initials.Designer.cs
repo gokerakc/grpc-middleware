@@ -12,7 +12,7 @@ using Starfish.Infrastructure.Data;
 namespace Starfish.Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20221211234347_Initials")]
+    [Migration("20221212123706_Initials")]
     partial class Initials
     {
         /// <inheritdoc />
@@ -67,9 +67,6 @@ namespace Starfish.Infrastructure.Migrations
 
                     b.Property<Guid>("TargetId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

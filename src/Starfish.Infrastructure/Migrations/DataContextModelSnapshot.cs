@@ -65,9 +65,6 @@ namespace Starfish.Infrastructure.Migrations
                     b.Property<Guid>("TargetId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("SourceId");
