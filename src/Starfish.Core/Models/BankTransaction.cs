@@ -1,6 +1,6 @@
 ﻿namespace Starfish.Core.Models;
 
-public class BankTransaction
+public record BankTransaction
 {
     public Guid Id { get; set; }
     
@@ -11,8 +11,6 @@ public class BankTransaction
     public decimal Amount { get; set; }
     
     public string? Description { get; set; }
-    
-    public BankTransactionTypes Type { get; set; }
     
     public DateTime Date { get; set; }
 }

@@ -42,15 +42,22 @@ public class BankTransactionsRepository : IRepository<BankTransaction>
 
     public async Task Delete(Guid id, CancellationToken ctx)
     {
-        await _context.BankTransactions
+        var entity = await _context.BankTransactions
             .Where(x => x.Id == id)
-            .ExecuteDeleteAsync(ctx);
+            .FirstAsync(ctx);
+        
+        _context.Remove(entity);
+        await _context.SaveChangesAsync(ctx);
     }
 
     public async Task Delete(List<Guid> ids, CancellationToken ctx)
     {
-        await _context.BankTransactions
+        var entities = await _context.BankTransactions
             .Where(x => ids.Contains(x.Id))
-            .ExecuteDeleteAsync(ctx);
+            .ToListAsync(ctx);
+        
+        _context.RemoveRange(entities);
+
+        await _context.SaveChangesAsync(ctx);
     }
 }

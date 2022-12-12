@@ -1,6 +1,6 @@
 ﻿namespace Starfish.Core.Models;
 
-public class BankAccount
+public record BankAccount
 {
     public Guid Id { get; set; }
     
