@@ -4,7 +4,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{12255100-A99
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{8EEEC95F-F9C2-4844-8CA7-9BD5BCD6123C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Starfish.GrpcServices", "src\Starfish.GrpcServices\Starfish.GrpcServices.csproj", "{7FF97358-25C9-41EF-B492-66332F1FD5C6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Starfish.GrpcService.Server", "src\Starfish.GrpcService.Server\Starfish.GrpcService.Server.csproj", "{7FF97358-25C9-41EF-B492-66332F1FD5C6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Starfish.Web", "src\Starfish.Web\Starfish.Web.csproj", "{C936D1BE-BDF5-4B8B-8436-3789C2540F5F}"
 EndProject

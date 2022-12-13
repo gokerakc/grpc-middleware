@@ -1,10 +1,11 @@
-using System.Diagnostics;
+using Grpc.Net.Client;
 using Microsoft.EntityFrameworkCore;
 using Starfish.Core.Models;
 using Starfish.Core.Services;
 using Starfish.Infrastructure.Data;
 using Starfish.Infrastructure.Repositories;
 using Starfish.Shared;
+using Starfish.Web;
 using Starfish.Web.HostedServices;
 using Starfish.Web.Middlewares;
 
@@ -28,6 +29,14 @@ if (builder.Environment.IsDevelopment())
 {
     builder.Services.AddHostedService<SeedSampleDataService>();    
 }
+
+// Starfish GRPC client
+var grpcServiceAddress = builder.Configuration.GetConnectionString("GrpcServiceConnection") ??
+                            throw new ArgumentException("Grpc service address is missing.");
+using var channel = GrpcChannel.ForAddress(grpcServiceAddress);
+var requestLoggerClient = new RequestLogger.RequestLoggerClient(channel);
+builder.Services.AddSingleton(requestLoggerClient);
+
 
 // Starfish middleware injections
 builder.Services.AddSingleton<ProcessTimeMiddleware>();

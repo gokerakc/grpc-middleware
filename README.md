@@ -14,6 +14,7 @@ And will include:
 - GitHub actions
 - Docker files
 - IAC (Azure or AWS)
+- Rate limiting
 
 ![project-starfish](./starfish.png "Project Starfish")
 
