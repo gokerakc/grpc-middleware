@@ -15,13 +15,22 @@ public class ProcessTimeMiddleware : IMiddleware
     
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
-        var sw = new Stopwatch();
-        sw.Start();
+        var startingTime = Stopwatch.GetTimestamp();
         await next.Invoke(context);
-        sw.Stop();
-
-        var requestDetails = Map(context.Request, Convert.ToInt32(sw.ElapsedMilliseconds));
-        Task.Run(() => _requestLoggerClient.LogAsync(requestDetails));
+        var endingTime = Stopwatch.GetTimestamp();
+        
+        Task.Run(async() =>
+        {
+            try
+            {
+                var requestDetails = Map(context.Request, (int)Stopwatch.GetElapsedTime(startingTime, endingTime).TotalMilliseconds);
+                await _requestLoggerClient.LogAsync(requestDetails);
+            }
+            catch
+            {
+                // ignored
+            }
+        });
     }
 
     private static RequestDetailsRequest Map(HttpRequest request, int elapsedMs)
