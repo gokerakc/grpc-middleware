@@ -29,12 +29,26 @@ public class DataContext : DbContext
             .WithMany()
             .HasForeignKey(x => x.SourceId)
             .OnDelete(DeleteBehavior.ClientCascade);
-        
+
         modelBuilder.Entity<BankTransaction>()
             .HasOne<BankAccount>()
             .WithMany()
             .HasForeignKey(x => x.TargetId)
-            .OnDelete(DeleteBehavior.ClientCascade);;
+            .OnDelete(DeleteBehavior.ClientCascade);
+        
+        // Creates BankAccountsHistory table to track changes
+        modelBuilder.Entity<BankAccount>()
+            .ToTable(name: "BankAccounts", bankAccountsTable =>
+            {
+                bankAccountsTable.IsTemporal();
+            });
+        
+        // Creates BankTransactionsHistory table to track changes
+        modelBuilder.Entity<BankTransaction>()
+            .ToTable(name: "BankTransactions", bankTransactionsTable =>
+            {
+                bankTransactionsTable.IsTemporal();
+            });
     }
 
     public DbSet<BankAccount> BankAccounts { get; set; }
