@@ -1,9 +1,16 @@
+using Serilog;
 using Starfish.GrpcService.Server.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddGrpc();
+
+// Use Serilog
+builder.Host.UseSerilog((builderContext, serviceProvider, loggerConfiguration) =>
+{
+    loggerConfiguration.ReadFrom.Configuration(builderContext.Configuration);
+});
 
 var app = builder.Build();
 

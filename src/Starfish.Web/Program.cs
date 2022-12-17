@@ -1,5 +1,6 @@
 using Grpc.Net.Client;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using Starfish.Core.Models;
 using Starfish.Core.Services;
 using Starfish.Infrastructure.Data;
@@ -10,6 +11,12 @@ using Starfish.Web.HostedServices;
 using Starfish.Web.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Use Serilog
+builder.Host.UseSerilog((builderContext, serviceProvider, loggerConfiguration) =>
+{
+    loggerConfiguration.ReadFrom.Configuration(builderContext.Configuration);
+});
 
 // Add services to the container.
 
