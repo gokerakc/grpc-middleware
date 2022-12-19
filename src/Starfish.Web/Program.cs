@@ -7,8 +7,10 @@ using Starfish.Infrastructure.Data;
 using Starfish.Infrastructure.Repositories;
 using Starfish.Shared;
 using Starfish.Web;
+using Starfish.Web.Configuration;
 using Starfish.Web.HostedServices;
 using Starfish.Web.Middlewares;
+using Starfish.Web.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +21,6 @@ builder.Host.UseSerilog((builderContext, serviceProvider, loggerConfiguration) =
 });
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -44,10 +45,7 @@ using var channel = GrpcChannel.ForAddress(grpcServiceAddress);
 var requestLoggerClient = new RequestLogger.RequestLoggerClient(channel);
 builder.Services.AddSingleton(requestLoggerClient);
 
-
-// Starfish middleware injections
-builder.Services.AddSingleton<ProcessTimeMiddleware>();
-
+// Starfish database configuration
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<DataContext>(options =>
 {
@@ -58,6 +56,19 @@ builder.Services.AddDbContext<DataContext>(options =>
                 .EnableRetryOnFailure());
 });
 
+// Add a new configuration source
+builder.Configuration.Sources.Add(new StarfishConfigurationSource
+{
+    OptionsAction = (optionsBuilder) => optionsBuilder.UseSqlServer(connectionString),
+    ReloadOnChange = true
+});
+
+// Starfish options configuration
+builder.Services.Configure<StarfishLoggingOptions>(builder.Configuration.GetSection("StarfishLoggingOptions"));
+
+// Starfish middleware injections
+builder.Services.AddSingleton<RequestLoggerMiddleware>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -67,7 +78,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseMiddleware<ProcessTimeMiddleware>();
+app.UseMiddleware<RequestLoggerMiddleware>();
 
 app.UseHttpsRedirection();
 
