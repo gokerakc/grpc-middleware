@@ -5,25 +5,26 @@ using Starfish.Web.Options;
 
 namespace Starfish.Web.Configuration;
 
-public class StarfishConfigurationProvider : ConfigurationProvider
+public class StarfishConfigurationProvider : ConfigurationProvider, IDisposable
 {
-    private readonly StarfishConfigurationSource _source;
+    public StarfishConfigurationSource Source { get; }
+
     private readonly Timer? _timer;
     
     public StarfishConfigurationProvider(StarfishConfigurationSource source)
     {
-        _source = source;
+        Source = source;
 
-        if (_source.ReloadOnChange)
+        if (Source.ReloadPeriodically)
         {
-            _timer = new Timer(ReloadSettings, null, TimeSpan.Zero, TimeSpan.FromSeconds(5));
+            _timer = new Timer(ReloadSettings, null, TimeSpan.Zero, TimeSpan.FromSeconds(Source.PeriodInSeconds));
         }
     }
 
     public override void Load()
     {
         var builder = new DbContextOptionsBuilder<DataContext>();
-        _source.OptionsAction(builder);
+        Source.OptionsAction(builder);
         
         using var dbContext = new DataContext(builder.Options);
         
@@ -56,5 +57,10 @@ public class StarfishConfigurationProvider : ConfigurationProvider
     {
         Load();
         OnReload();
+    }
+
+    public void Dispose()
+    {
+        _timer?.Dispose();
     }
 }

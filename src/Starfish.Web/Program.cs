@@ -60,7 +60,8 @@ builder.Services.AddDbContext<DataContext>(options =>
 builder.Configuration.Sources.Add(new StarfishConfigurationSource
 {
     OptionsAction = (optionsBuilder) => optionsBuilder.UseSqlServer(connectionString),
-    ReloadOnChange = true
+    ReloadPeriodically = true,
+    PeriodInSeconds = 5
 });
 
 // Starfish options configuration
