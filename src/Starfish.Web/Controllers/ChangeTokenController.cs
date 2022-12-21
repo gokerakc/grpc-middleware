@@ -5,8 +5,8 @@ using Starfish.Core.Resources;
 namespace Starfish.Web.Controllers;
 
 [ApiController]
-[Route("change-tokens")]
-public class ChangeTrackerController : ControllerBase
+[Route("change-token")]
+public class ChangeTokenController : ControllerBase
 {
     /// <summary>
     /// Just an experimental endpoint to try the Change tokens feature.

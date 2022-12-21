@@ -1,4 +1,6 @@
+using System.Text.Json.Serialization;
 using Grpc.Net.Client;
+using Hellang.Middleware.ProblemDetails;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Starfish.Core.Models;
@@ -8,6 +10,7 @@ using Starfish.Infrastructure.Repositories;
 using Starfish.Shared;
 using Starfish.Web;
 using Starfish.Web.Configuration;
+using Starfish.Web.Exceptions;
 using Starfish.Web.HostedServices;
 using Starfish.Web.Middlewares;
 using Starfish.Web.Options;
@@ -16,7 +19,7 @@ using Starfish.Web.Watchers;
 var builder = WebApplication.CreateBuilder(args);
 
 // Use Serilog
-builder.Host.UseSerilog((builderContext, serviceProvider, loggerConfiguration) =>
+builder.Host.UseSerilog((builderContext, _, loggerConfiguration) =>
 {
     loggerConfiguration.ReadFrom.Configuration(builderContext.Configuration);
 });
@@ -71,8 +74,18 @@ builder.Services.Configure<StarfishLoggingOptions>(builder.Configuration.GetSect
 // Starfish middleware injections
 builder.Services.AddSingleton<RequestLoggerMiddleware>();
 
-// Watchers (Just to try Change tokens feature)
+// Watchers (Just to try Change token feature)
 WatcherHelper.AddGuestListWatcher();
+
+
+// Add global exception handler (ProblemDetails)
+builder.Services.AddProblemDetails((o) =>
+    {
+        ProblemDetailsHelper.ConfigureProblemDetails(o, builder.Environment.IsDevelopment());
+    })
+    .AddControllers()
+    // Adds MVC conventions to work better with the ProblemDetails middleware.
+    .AddJsonOptions(x => x.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull);
 
 
 var app = builder.Build();
@@ -83,6 +96,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseProblemDetails();
 
 app.UseMiddleware<RequestLoggerMiddleware>();
 

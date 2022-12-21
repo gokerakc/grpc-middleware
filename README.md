@@ -7,6 +7,9 @@ Includes:
 - Entity Framework 7
 - Clean architecture
 - GRPC services
+- Global exception handler
+- Change token sample (GuestListSource)
+- Custom configuration provider (Read settings from database)
 - ...
 
 And will include:
