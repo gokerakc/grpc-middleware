@@ -11,6 +11,7 @@ using Starfish.Web.Configuration;
 using Starfish.Web.HostedServices;
 using Starfish.Web.Middlewares;
 using Starfish.Web.Options;
+using Starfish.Web.Watchers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -69,6 +70,10 @@ builder.Services.Configure<StarfishLoggingOptions>(builder.Configuration.GetSect
 
 // Starfish middleware injections
 builder.Services.AddSingleton<RequestLoggerMiddleware>();
+
+// Watchers (Just to try Change tokens feature)
+WatcherHelper.AddGuestListWatcher();
+
 
 var app = builder.Build();
 
