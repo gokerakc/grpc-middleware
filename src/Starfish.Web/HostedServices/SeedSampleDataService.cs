@@ -7,7 +7,7 @@ public class SeedSampleDataService : IHostedService
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly ILogger<SeedSampleDataService> _logger;
-    private List<BankAccount> _bankAccounts;
+    private List<BankAccount>? _bankAccounts;
 
     public SeedSampleDataService(IServiceProvider serviceProvider, ILogger<SeedSampleDataService> logger)
     {
@@ -65,7 +65,7 @@ public class SeedSampleDataService : IHostedService
     {
         var bankTransactions = new List<BankTransaction>();
 
-        var bankAccountIds = _bankAccounts.Select(x => x.Id).ToList();
+        var bankAccountIds = _bankAccounts!.Select(x => x.Id).ToList();
 
         for (var i = 0; i < 50_000; i++)
         {

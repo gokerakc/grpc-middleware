@@ -5,19 +5,11 @@ namespace Starfish.Tests.Repositories;
 
 public static class DatabaseContextBase
 {
-    private static DataContext? _dataContext;
-    
     public static DataContext GetDataContext()
     {
-        if (_dataContext is not null)
-        {
-            return _dataContext;
-        }
-        
         var optionsBuilder = new DbContextOptionsBuilder<DataContext>()
-            .UseInMemoryDatabase("starfish-db-test");
+            .UseInMemoryDatabase(Guid.NewGuid().ToString());
 
-        _dataContext = new DataContext(optionsBuilder.Options);
-        return _dataContext;
+        return new DataContext(optionsBuilder.Options);
     }
 }

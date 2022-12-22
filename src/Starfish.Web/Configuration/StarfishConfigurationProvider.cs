@@ -45,7 +45,7 @@ public class StarfishConfigurationProvider : ConfigurationProvider, IDisposable
         };
 
         context.StarfishSettings.AddRange(
-            settings.Select(kvp => new StarfishSettings(kvp.Key, kvp.Value))
+            settings.Select(kvp => new StarfishSettings(kvp.Key, kvp.Value!))
                 .ToArray());
 
         context.SaveChanges();

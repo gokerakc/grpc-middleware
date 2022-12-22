@@ -48,6 +48,6 @@ public class RequestLoggerMiddleware : IMiddleware
     private static string GetClientId(IHeaderDictionary headers)
     {
         var clientId = headers["ClientId"];
-        return (clientId.Count == 0 ? "unknown" : clientId)!;
+        return (clientId.Count == 0 ? "unknown" : clientId!);
     }
 }
