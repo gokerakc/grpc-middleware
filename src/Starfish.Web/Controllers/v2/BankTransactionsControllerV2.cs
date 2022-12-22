@@ -2,17 +2,20 @@
 using Microsoft.AspNetCore.Mvc;
 using Starfish.Core.Models;
 using Starfish.Core.Services;
+using Starfish.Web.Controllers.v1;
 
-namespace Starfish.Web.Controllers;
+namespace Starfish.Web.Controllers.v2;
 
 [ApiController]
+[ApiVersion("2.0")]
+[Tags("Bank Transactions")]
 [Route("bank-transactions")]
-public class BankTransactionsController : ControllerBase
+public class BankTransactionsControllerV2 : ControllerBase
 {
     private readonly IBankTransactionsService _bankTransactionsService;
     private readonly ILogger<BankTransactionsController> _logger;
 
-    public BankTransactionsController(IBankTransactionsService bankTransactionsService, ILogger<BankTransactionsController> logger)
+    public BankTransactionsControllerV2(IBankTransactionsService bankTransactionsService, ILogger<BankTransactionsController> logger)
     {
         _bankTransactionsService = bankTransactionsService;
         _logger = logger;

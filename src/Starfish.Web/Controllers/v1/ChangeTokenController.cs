@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Starfish.Core.Resources;
 
-namespace Starfish.Web.Controllers;
+namespace Starfish.Web.Controllers.v1;
 
 [ApiController]
+[ApiVersion("1.0")]
+[Tags("Change Token")]
 [Route("change-token")]
 public class ChangeTokenController : ControllerBase
 {

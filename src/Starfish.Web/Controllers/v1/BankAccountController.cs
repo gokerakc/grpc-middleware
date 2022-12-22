@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Starfish.Core.Models;
 using Starfish.Core.Services;
 
-namespace Starfish.Web.Controllers;
+namespace Starfish.Web.Controllers.v1;
 
 [ApiController]
+[ApiVersion("1.0")]
+[Tags("Bank Accounts")]
 [Route("bank-accounts")]
 public class BankAccountsController : ControllerBase
 {
