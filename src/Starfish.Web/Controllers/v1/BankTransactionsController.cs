@@ -27,7 +27,7 @@ public class BankTransactionsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<BankTransaction>>> GetAll(CancellationToken ctx)
     {
-        var transactions = await _bankTransactionsService.GetAll(ctx);
+        var transactions = await _bankTransactionsService.GetAllAsync(ctx);
         return Ok(transactions);
     }
     
@@ -39,7 +39,7 @@ public class BankTransactionsController : ControllerBase
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<IEnumerable<BankTransaction>>> Get(Guid id, CancellationToken ctx)
     {
-        var transaction = await _bankTransactionsService.Get(id, ctx);
+        var transaction = await _bankTransactionsService.GetAsync(id, ctx);
         return Ok(transaction);
     }
     
@@ -51,7 +51,7 @@ public class BankTransactionsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult> Add(BankTransaction transaction, CancellationToken ctx)
     {
-        await _bankTransactionsService.Add(transaction, ctx);
+        await _bankTransactionsService.AddAsync(transaction, ctx);
         return StatusCode((int)HttpStatusCode.Created);
     }
     
@@ -63,7 +63,7 @@ public class BankTransactionsController : ControllerBase
     [HttpDelete("{id:guid}")]
     public async Task<ActionResult<IEnumerable<BankTransaction>>> Delete(Guid id, CancellationToken ctx)
     {
-        await _bankTransactionsService.Delete(id, ctx);
+        await _bankTransactionsService.DeleteAsync(id, ctx);
         return Ok();
     }
 }

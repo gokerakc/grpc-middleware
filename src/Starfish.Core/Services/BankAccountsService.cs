@@ -12,11 +12,11 @@ public class BankAccountsService : IBankAccountsService
         _bankAccountRepository = bankAccountRepository;
     }
     
-    public async Task<List<BankAccount>> GetAll(CancellationToken ctx) => await _bankAccountRepository.GetAll(ctx);
+    public async Task<List<BankAccount>> GetAllAsync(CancellationToken ctx) => await _bankAccountRepository.GetAllAsync(ctx);
 
-    public async Task<BankAccount?> Get(Guid id, CancellationToken ctx) => await _bankAccountRepository.Get(id, ctx);
+    public async Task<BankAccount?> GetAsync(Guid id, CancellationToken ctx) => await _bankAccountRepository.GetAsync(id, ctx);
 
-    public async Task Add(BankAccount account, CancellationToken ctx) => await _bankAccountRepository.Add(account, ctx);
+    public async Task AddAsync(BankAccount account, CancellationToken ctx) => await _bankAccountRepository.AddAsync(account, ctx);
     
-    public async Task Delete(Guid id, CancellationToken ctx) => await _bankAccountRepository.Delete(id, ctx);
+    public async Task DeleteAsync(Guid id, CancellationToken ctx) => await _bankAccountRepository.DeleteAsync(id, ctx);
 }

@@ -27,7 +27,7 @@ public class BankTransactionsRepositoryTests
         
         var bankTransaction = new BankTransaction { Id= id, TargetId = _targetId, SourceId = _sourceId, Amount = 1500, Description = "Test desc"};
 
-        await _subject.Add(bankTransaction, _ctx);
+        await _subject.AddAsync(bankTransaction, _ctx);
 
         var result = await _context.BankTransactions.FirstOrDefaultAsync(x => x.Id == id, _ctx);
         
@@ -47,7 +47,7 @@ public class BankTransactionsRepositoryTests
             new BankTransaction { Id = id02, TargetId = _targetId, SourceId = _sourceId, Amount = 1500, Description = "Test desc 02" }
         };
 
-        await _subject.Add(bankTransactions, _ctx);
+        await _subject.AddAsync(bankTransactions, _ctx);
 
         var result = await _context.BankTransactions
             .Select(x => x)
@@ -67,7 +67,7 @@ public class BankTransactionsRepositoryTests
         await _context.BankTransactions.AddAsync(bankTransaction, _ctx);
         await _context.SaveChangesAsync(_ctx);
 
-        var result = await _subject.Get(id, _ctx);
+        var result = await _subject.GetAsync(id, _ctx);
         
         Assert.NotNull(result);
         Assert.Equal(result, bankTransaction);
@@ -82,7 +82,7 @@ public class BankTransactionsRepositoryTests
         await _context.BankTransactions.AddAsync(bankTransaction, _ctx);
         await _context.SaveChangesAsync(_ctx);
 
-        await _subject.Delete(id, _ctx);
+        await _subject.DeleteAsync(id, _ctx);
         
         var result = await _context.BankTransactions.FirstOrDefaultAsync(x => x.Id == id, _ctx);
         

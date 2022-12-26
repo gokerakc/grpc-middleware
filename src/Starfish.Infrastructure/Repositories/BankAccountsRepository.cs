@@ -8,41 +8,56 @@ namespace Starfish.Infrastructure.Repositories;
 public class BankAccountsRepository : IRepository<BankAccount>
 {
     private readonly DataContext _context;
+    private readonly DbSet<BankAccount>  _bankAccounts;
 
     public BankAccountsRepository(DataContext context)
     {
         _context = context;
+        _bankAccounts = context.Set<BankAccount>();
     }
     
-    public async Task<List<BankAccount>> GetAll(CancellationToken ctx)
+    public async Task<List<BankAccount>> GetAllAsync(CancellationToken ctx)
     {
-        return await _context.BankAccounts
+        return await _bankAccounts
             .AsNoTracking()
             .ToListAsync(ctx);
     }
 
-    public async Task<BankAccount?> Get(Guid id, CancellationToken ctx)
+    public BankAccount? Get(Guid id)
     {
-        return await _context.BankAccounts
+        return _bankAccounts
+            .AsNoTracking()
+            .FirstOrDefault(x => x.Id == id);
+    }
+
+    public async Task<BankAccount?> GetAsync(Guid id, CancellationToken ctx)
+    {
+        return await _bankAccounts
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == id, ctx);
     }
 
-    public async Task Add(BankAccount account, CancellationToken ctx)
+    public async Task AddAsync(BankAccount account, CancellationToken ctx)
     {
-        await _context.BankAccounts.AddAsync(account, ctx);
+        await _bankAccounts.AddAsync(account, ctx);
         await _context.SaveChangesAsync(ctx);
     }
 
-    public async Task Add(IEnumerable<BankAccount> accounts, CancellationToken ctx)
+    public void Add(BankAccount account)
     {
-        await _context.BankAccounts.AddRangeAsync(accounts, ctx);
+        _bankAccounts.Add(account);
+        _context.SaveChangesAsync();
+    }
+
+    public async Task AddAsync(IEnumerable<BankAccount> accounts, CancellationToken ctx)
+    {
+        await _bankAccounts.AddRangeAsync(accounts, ctx);
         await _context.SaveChangesAsync(ctx);
     }
 
-    public async Task Delete(Guid id, CancellationToken ctx)
+    public async Task DeleteAsync(Guid id, CancellationToken ctx)
     {
-        var entity = await _context.BankAccounts
+        var entity = await _bankAccounts
             .Where(x => x.Id == id)
             .FirstAsync(ctx);
         
@@ -50,9 +65,9 @@ public class BankAccountsRepository : IRepository<BankAccount>
         await _context.SaveChangesAsync(ctx);
     }
 
-    public async Task Delete(List<Guid> ids, CancellationToken ctx)
+    public async Task DeleteAsync(List<Guid> ids, CancellationToken ctx)
     {
-        var entities = await _context.BankAccounts
+        var entities = await _bankAccounts
             .Where(x => ids.Contains(x.Id))
             .ToListAsync(ctx);
         

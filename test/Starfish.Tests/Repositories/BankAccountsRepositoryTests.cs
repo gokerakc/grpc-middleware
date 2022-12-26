@@ -24,7 +24,7 @@ public class BankAccountsRepositoryTests
         
         var bankAccount = new BankAccount { Id= id, AccountName = "John Doe", AccountNumber = "88736728", Balance = 0 };
 
-        await _subject.Add(bankAccount, _ctx);
+        await _subject.AddAsync(bankAccount, _ctx);
 
         var result = await _context.BankAccounts.FirstOrDefaultAsync(x => x.Id == id, _ctx);
         
@@ -44,7 +44,7 @@ public class BankAccountsRepositoryTests
             new BankAccount { Id= id02, AccountName = "John Doe 02", AccountNumber = "11736728", Balance = 200 }
         };
 
-        await _subject.Add(bankAccounts, _ctx);
+        await _subject.AddAsync(bankAccounts, _ctx);
 
         var result = await _context.BankAccounts
             .Select(x => x)
@@ -64,7 +64,7 @@ public class BankAccountsRepositoryTests
         await _context.BankAccounts.AddAsync(bankAccount, _ctx);
         await _context.SaveChangesAsync(_ctx);
 
-        var result = await _subject.Get(id, _ctx);
+        var result = await _subject.GetAsync(id, _ctx);
         
         Assert.NotNull(result);
         Assert.Equal(result, bankAccount);
@@ -79,7 +79,7 @@ public class BankAccountsRepositoryTests
         await _context.BankAccounts.AddAsync(bankAccount, _ctx);
         await _context.SaveChangesAsync(_ctx);
 
-        await _subject.Delete(id, _ctx);
+        await _subject.DeleteAsync(id, _ctx);
         
         var result = await _context.BankAccounts.FirstOrDefaultAsync(x => x.Id == id, _ctx);
         

@@ -10,8 +10,8 @@ public static class WatcherHelper
     public static void AddGuestListWatcher()
     {
         ChangeToken.OnChange(
-            () => GuestListSource.Watch(WatcherId),
-            () =>
+            changeTokenProducer: () => GuestListSource.Watch(WatcherId),
+            changeTokenConsumer: () =>
             {
                 Debug.WriteLine("Guest list has been changed");
                 

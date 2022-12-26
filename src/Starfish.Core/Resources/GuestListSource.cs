@@ -42,8 +42,10 @@ public class GuestListSource : IDisposable
     public static bool Exists(string fullName) => Guests.Contains(fullName);
     
     ///
-    /// <summary>Rest of the class related to the tracking feature.
-    /// If you need to track the guest list you can use the Watch() method.</summary>
+    /// <summary>
+    /// Rest of the class related to the tracking feature.
+    /// If you need to track the guest list you can use the Watch() method.
+    /// </summary>
     /// 
     private static CancellationTokenSource? _cancellationTokenSource;
 
@@ -65,7 +67,7 @@ public class GuestListSource : IDisposable
         return changeToken;
     }
     
-    private static void Changed(object? state = null)
+    private static void Changed()
     {
         _cancellationTokenSource?.Cancel();
     }

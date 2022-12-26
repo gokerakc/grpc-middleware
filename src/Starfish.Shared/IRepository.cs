@@ -2,15 +2,15 @@
 
 public interface IRepository<T> where T: class 
 {
-    public Task<List<T>> GetAll(CancellationToken ctx);
+    public Task<List<T>> GetAllAsync(CancellationToken ctx);
     
-    public Task<T?> Get(Guid id, CancellationToken ctx);
+    public Task<T?> GetAsync(Guid id, CancellationToken ctx);
     
-    public Task Add(T item, CancellationToken ctx);
+    public Task AddAsync(T item, CancellationToken ctx);
     
-    public Task Add(IEnumerable<T> items, CancellationToken ctx);
+    public Task AddAsync(IEnumerable<T> items, CancellationToken ctx);
     
-    public Task Delete(Guid id, CancellationToken ctx);
+    public Task DeleteAsync(Guid id, CancellationToken ctx);
     
-    public Task Delete(List<Guid> ids, CancellationToken ctx);
+    public Task DeleteAsync(List<Guid> ids, CancellationToken ctx);
 }
