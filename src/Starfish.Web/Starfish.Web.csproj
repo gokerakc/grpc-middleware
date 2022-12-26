@@ -8,9 +8,7 @@
   </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="BenchmarkDotNet" Version="0.13.3">
-            <PrivateAssets>all</PrivateAssets>/>    
-        </PackageReference>
+        <PackageReference Include="BenchmarkDotNet" Version="0.13.3" />
         <PackageReference Include="Google.Protobuf" Version="3.21.11" />
         <PackageReference Include="Grpc.Net.Client" Version="2.50.0" />
         <PackageReference Include="Grpc.Tools" Version="2.51.0">
