@@ -11,6 +11,7 @@ using Starfish.Web.Configuration;
 using Starfish.Web.Exceptions;
 using Starfish.Web.Middlewares;
 using Hellang.Middleware.ProblemDetails;
+using Starfish.Web.HostedServices;
 
 namespace Starfish.Web.Extensions;
 
@@ -105,5 +106,15 @@ public static class ServiceCollectionExtensions
         return serviceCollection;
     }
     
-    
+    public static IServiceCollection AddStarfishHostedServices(this IServiceCollection serviceCollection, bool isDevelopment)
+    {
+        serviceCollection.AddHostedService<DatabaseMigrationService>();
+
+        if (isDevelopment)
+        {
+            serviceCollection.AddHostedService<SeedSampleDataService>();    
+        }
+
+        return serviceCollection;
+    }
 }

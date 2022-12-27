@@ -2,7 +2,6 @@ using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Serilog;
 using Starfish.Web.Extensions;
-using Starfish.Web.HostedServices;
 using Starfish.Web.Middlewares;
 using Starfish.Web.Options;
 using Starfish.Web.Watchers;
@@ -29,13 +28,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
 
-// Starfish hosted services
 
-builder.Services.AddHostedService<DatabaseMigrationService>();
-if (builder.Environment.IsDevelopment())
-{
-   builder.Services.AddHostedService<SeedSampleDataService>();    
-}
+builder.Services.AddStarfishHostedServices(builder.Environment.IsDevelopment());
 
 // Watchers (Just to try Change token feature)
 WatcherHelper.AddGuestListWatcher();
