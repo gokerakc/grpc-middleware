@@ -11,12 +11,24 @@ using Starfish.Web.Configuration;
 using Starfish.Web.Exceptions;
 using Starfish.Web.Middlewares;
 using Hellang.Middleware.ProblemDetails;
+using Serilog;
 using Starfish.Web.HostedServices;
+using Starfish.Web.Options;
 
 namespace Starfish.Web.Extensions;
 
 public static class ServiceCollectionExtensions
 {
+
+    public static IServiceCollection AddSerilog(this IServiceCollection serviceCollection, ConfigureHostBuilder hostBuilder)
+    {
+        hostBuilder.UseSerilog((builderContext, _, loggerConfiguration) =>
+        {
+            loggerConfiguration.ReadFrom.Configuration(builderContext.Configuration);
+        });
+
+        return serviceCollection;
+    }
     public static IServiceCollection AddApiVersioningDependencies(this IServiceCollection serviceCollection)
     {
         serviceCollection.AddApiVersioning(opt =>
@@ -89,6 +101,8 @@ public static class ServiceCollectionExtensions
             PeriodInSeconds = 5,
             LoggerFactory = sp.GetRequiredService<ILoggerFactory>()
         });
+        
+        serviceCollection.Configure<StarfishLoggingOptions>(configuration.GetSection("StarfishLoggingOptions"));
 
         return serviceCollection;
     }

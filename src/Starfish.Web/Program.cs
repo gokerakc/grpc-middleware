@@ -1,6 +1,5 @@
 using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Serilog;
 using Starfish.Web.Extensions;
 using Starfish.Web.Middlewares;
 using Starfish.Web.Options;
@@ -8,18 +7,14 @@ using Starfish.Web.Watchers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.UseSerilog((builderContext, _, loggerConfiguration) =>
-{
-    loggerConfiguration.ReadFrom.Configuration(builderContext.Configuration);
-});
-
-builder.Services.AddApiVersioningDependencies()
+builder.Services
+    .AddSerilog(builder.Host)
+    .AddApiVersioningDependencies()
     .AddStarfishDependencies()
     .AddStarfishGrpcClient(builder.Configuration)
     .AddStarfishDatabase(builder.Configuration)
-    .AddStarfishConfigurationSource(builder.Configuration);
-
-builder.Services.Configure<StarfishLoggingOptions>(builder.Configuration.GetSection("StarfishLoggingOptions"));
+    .AddStarfishConfigurationSource(builder.Configuration)
+    .AddStarfishHostedServices(builder.Environment.IsDevelopment());
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -27,9 +22,6 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
-
-
-builder.Services.AddStarfishHostedServices(builder.Environment.IsDevelopment());
 
 // Watchers (Just to try Change token feature)
 WatcherHelper.AddGuestListWatcher();
