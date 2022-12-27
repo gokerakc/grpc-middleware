@@ -79,12 +79,14 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddStarfishConfigurationSource(this IServiceCollection serviceCollection,
         ConfigurationManager configuration)
     {
+        var sp = serviceCollection.BuildServiceProvider();
         var connectionString = configuration.GetConnectionString("DefaultConnection");
         configuration.Sources.Add(new SqlServerConfigurationSource
         {
             OptionsAction = (optionsBuilder) => optionsBuilder.UseSqlServer(connectionString),
             ReloadPeriodically = true,
-            PeriodInSeconds = 5
+            PeriodInSeconds = 5,
+            LoggerFactory = sp.GetRequiredService<ILoggerFactory>()
         });
 
         return serviceCollection;

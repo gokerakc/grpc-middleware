@@ -21,7 +21,6 @@ public class SeedSampleDataService : IHostedService
         using (var scope = _serviceProvider.CreateScope())
         {
             var dbContext = scope.ServiceProvider.GetRequiredService<DataContext>();
-            await dbContext.Database.EnsureCreatedAsync(cancellationToken);
 
             if (dbContext.BankAccounts.Any() && dbContext.BankTransactions.Any())
             {

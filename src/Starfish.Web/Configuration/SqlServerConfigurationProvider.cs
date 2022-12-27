@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Starfish.Infrastructure.Data;
 using Starfish.Shared;
+using Starfish.Web.Extensions;
 using Starfish.Web.Options;
 
 namespace Starfish.Web.Configuration;
@@ -10,10 +11,14 @@ public class SqlServerConfigurationProvider : ConfigurationProvider, IDisposable
     public SqlServerConfigurationSource Source { get; }
 
     private readonly Timer? _timer;
+
+    private readonly ILogger<SqlServerConfigurationProvider> _logger;
     
     public SqlServerConfigurationProvider(SqlServerConfigurationSource source)
     {
         Source = source;
+
+        _logger = source.LoggerFactory.CreateLogger<SqlServerConfigurationProvider>();
 
         if (Source.ReloadPeriodically)
         {
@@ -28,8 +33,9 @@ public class SqlServerConfigurationProvider : ConfigurationProvider, IDisposable
 
         using (var dbContext = new DataContext(builder.Options))
         {
-            if (dbContext.Database.CanConnect() == false)
+            if (!dbContext.Database.CanConnect())
             {
+                _logger.DatabaseConnectionError($"{nameof(SqlServerConfigurationProvider)} can not connect to the database.");
                 return;
             }
             

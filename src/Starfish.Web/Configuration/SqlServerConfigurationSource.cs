@@ -6,6 +6,8 @@ public class SqlServerConfigurationSource : IConfigurationSource
 {
     public required Action<DbContextOptionsBuilder> OptionsAction { get; init; }
     
+    public required ILoggerFactory LoggerFactory { get; init; }
+    
     public bool ReloadPeriodically { get; init; }
 
     public int PeriodInSeconds { get; init; } = 5;
