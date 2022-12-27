@@ -2,7 +2,7 @@
 
 namespace Starfish.Web.Configuration;
 
-public class StarfishConfigurationSource : IConfigurationSource
+public class SqlServerConfigurationSource : IConfigurationSource
 {
     public required Action<DbContextOptionsBuilder> OptionsAction { get; init; }
     
@@ -11,5 +11,5 @@ public class StarfishConfigurationSource : IConfigurationSource
     public int PeriodInSeconds { get; init; } = 5;
 
     public IConfigurationProvider Build(IConfigurationBuilder builder) =>
-        new StarfishConfigurationProvider(this);
+        new SqlServerConfigurationProvider(this);
 }

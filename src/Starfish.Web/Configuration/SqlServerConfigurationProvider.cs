@@ -5,13 +5,13 @@ using Starfish.Web.Options;
 
 namespace Starfish.Web.Configuration;
 
-public class StarfishConfigurationProvider : ConfigurationProvider, IDisposable
+public class SqlServerConfigurationProvider : ConfigurationProvider, IDisposable
 {
-    public StarfishConfigurationSource Source { get; }
+    public SqlServerConfigurationSource Source { get; }
 
     private readonly Timer? _timer;
     
-    public StarfishConfigurationProvider(StarfishConfigurationSource source)
+    public SqlServerConfigurationProvider(SqlServerConfigurationSource source)
     {
         Source = source;
 
@@ -25,14 +25,18 @@ public class StarfishConfigurationProvider : ConfigurationProvider, IDisposable
     {
         var builder = new DbContextOptionsBuilder<DataContext>();
         Source.OptionsAction(builder);
-        
-        using var dbContext = new DataContext(builder.Options);
-        
-        dbContext.Database.EnsureCreated();
 
-        Data = dbContext.StarfishSettings.Any()
-            ? dbContext.StarfishSettings.ToDictionary<StarfishSettings, string, string?>(c => c.Id, c => c.Value, StringComparer.OrdinalIgnoreCase)
-            : CreateAndSaveDefaultValues(dbContext);
+        using (var dbContext = new DataContext(builder.Options))
+        {
+            if (dbContext.Database.CanConnect() == false)
+            {
+                return;
+            }
+            
+            Data = dbContext.StarfishSettings.Any()
+                ? dbContext.StarfishSettings.ToDictionary<StarfishSettings, string, string?>(c => c.Id, c => c.Value, StringComparer.OrdinalIgnoreCase)
+                : CreateAndSaveDefaultValues(dbContext);
+        }
     }
 
     private static IDictionary<string, string?> CreateAndSaveDefaultValues(
