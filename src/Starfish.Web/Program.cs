@@ -1,18 +1,7 @@
-using System.Text.Json.Serialization;
-using Grpc.Net.Client;
 using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.AspNetCore.Mvc.Versioning;
-using Microsoft.EntityFrameworkCore;
 using Serilog;
-using Starfish.Core.Models;
-using Starfish.Core.Services;
-using Starfish.Infrastructure.Data;
-using Starfish.Infrastructure.Repositories;
-using Starfish.Shared;
-using Starfish.Web;
-using Starfish.Web.Configuration;
-using Starfish.Web.Exceptions;
+using Starfish.Web.Extensions;
 using Starfish.Web.HostedServices;
 using Starfish.Web.Middlewares;
 using Starfish.Web.Options;
@@ -26,23 +15,15 @@ builder.Host.UseSerilog((builderContext, _, loggerConfiguration) =>
     loggerConfiguration.ReadFrom.Configuration(builderContext.Configuration);
 });
 
-// Add API versioning
-builder.Services.AddApiVersioning(opt =>
-{
-    opt.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1,0);
-    //opt.AssumeDefaultVersionWhenUnspecified = true;
-    opt.ReportApiVersions = true;
-    opt.ApiVersionReader = ApiVersionReader.Combine(new UrlSegmentApiVersionReader(),
-        new HeaderApiVersionReader("x-api-version"),
-        new MediaTypeApiVersionReader("x-api-version"));
-});
+builder.Services.AddApiVersioningDependencies()
+    .AddStarfishDependencies()
+    .AddStarfishGrpcClient(builder.Configuration)
+    .AddStarfishDatabase(builder.Configuration)
+    .AddStarfishConfigurationSource(builder.Configuration);
 
-// Add ApiExplorer to discover versions
-builder.Services.AddVersionedApiExplorer(setup =>
-{
-    setup.GroupNameFormat = "'V'VVV";
-    setup.SubstituteApiVersionInUrl = true;
-});
+
+
+builder.Services.Configure<StarfishLoggingOptions>(builder.Configuration.GetSection("StarfishLoggingOptions"));
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -51,63 +32,16 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
 
-
-// Starfish injections
-builder.Services.AddScoped<IRepository<BankAccount>, BankAccountsRepository>();
-builder.Services.AddScoped<IRepository<BankTransaction>, BankTransactionsRepository>();
-builder.Services.AddScoped<IBankAccountsService, BankAccountsService>();
-builder.Services.AddScoped<IBankTransactionsService, BankTransactionsService>();
-
 // Starfish hosted services
 if (builder.Environment.IsDevelopment())
 {
     builder.Services.AddHostedService<SeedSampleDataService>();    
 }
 
-// Starfish GRPC client
-var grpcServiceAddress = builder.Configuration.GetConnectionString("GrpcServiceConnection") ??
-                            throw new ArgumentException("Grpc service address is missing.");
-using var channel = GrpcChannel.ForAddress(grpcServiceAddress);
-var requestLoggerClient = new RequestLogger.RequestLoggerClient(channel);
-builder.Services.AddSingleton(requestLoggerClient);
-
-// Starfish database configuration
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<DataContext>(options =>
-{
-    options.UseSqlServer(connectionString,
-        providerOptions =>
-            providerOptions
-                .CommandTimeout(60)
-                .EnableRetryOnFailure());
-});
-
-// Add a new configuration source
-builder.Configuration.Sources.Add(new StarfishConfigurationSource
-{
-    OptionsAction = (optionsBuilder) => optionsBuilder.UseSqlServer(connectionString),
-    ReloadPeriodically = true,
-    PeriodInSeconds = 5
-});
-
-// Starfish options configuration
-builder.Services.Configure<StarfishLoggingOptions>(builder.Configuration.GetSection("StarfishLoggingOptions"));
-
-// Starfish middleware injections
-builder.Services.AddSingleton<RequestLoggerMiddleware>();
-
 // Watchers (Just to try Change token feature)
 WatcherHelper.AddGuestListWatcher();
 
-
-// Add global exception handler (ProblemDetails)
-builder.Services.AddProblemDetails((o) =>
-    {
-        ProblemDetailsHelper.ConfigureProblemDetails(o, builder.Environment.IsDevelopment());
-    })
-    .AddControllers()
-    // Adds MVC conventions to work better with the ProblemDetails middleware.
-    .AddJsonOptions(x => x.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull);
+builder.Services.AddGlobalExceptionHandler(builder.Environment.IsDevelopment());
 
 var app = builder.Build();
 

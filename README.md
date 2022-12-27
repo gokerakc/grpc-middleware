@@ -10,10 +10,10 @@ Includes:
 - Global exception handler
 - Change token sample (GuestListSource)
 - Custom configuration provider (Read settings from database)
+- BenchmarkDotNet
 - ...
 
 And will include:
-- BenchmarkDotNet
 - GitHub actions
 - Docker files
 - IAC (Azure or AWS)
