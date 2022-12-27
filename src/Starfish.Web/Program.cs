@@ -9,7 +9,6 @@ using Starfish.Web.Watchers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Use Serilog
 builder.Host.UseSerilog((builderContext, _, loggerConfiguration) =>
 {
     loggerConfiguration.ReadFrom.Configuration(builderContext.Configuration);
@@ -21,8 +20,6 @@ builder.Services.AddApiVersioningDependencies()
     .AddStarfishDatabase(builder.Configuration)
     .AddStarfishConfigurationSource(builder.Configuration);
 
-
-
 builder.Services.Configure<StarfishLoggingOptions>(builder.Configuration.GetSection("StarfishLoggingOptions"));
 
 // Add services to the container.
@@ -33,9 +30,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
 
 // Starfish hosted services
+
+builder.Services.AddHostedService<DatabaseMigrationService>();
 if (builder.Environment.IsDevelopment())
 {
-    builder.Services.AddHostedService<SeedSampleDataService>();    
+   builder.Services.AddHostedService<SeedSampleDataService>();    
 }
 
 // Watchers (Just to try Change token feature)
