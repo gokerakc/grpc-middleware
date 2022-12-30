@@ -11,11 +11,11 @@ Includes:
 - Change token sample (GuestListSource)
 - Custom configuration provider (Read settings from database)
 - BenchmarkDotNet
+- Docker files
 - ...
 
 And will include:
 - GitHub actions
-- Docker files
 - IAC (Azure or AWS)
 - Rate limiting
 

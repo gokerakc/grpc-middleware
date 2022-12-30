@@ -1,0 +1,9 @@
+// Some useful commands for the local docker setup
+
+docker network create starfish-net
+
+docker run --network starfish-net --name starfish-sqlserver -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=P455w0rd" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2022-latest
+
+docker build --tag starfish-api:1.0.0 .
+
+docker run -d --network starfish-net --name starfish-api -p 5001:80 starfish-api:1.0.0 -e "ASPNETCORE_ENVIRONMENT=Development"
