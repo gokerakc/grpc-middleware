@@ -11,17 +11,17 @@ public class PerformanceMonitorMiddleware : IMiddleware
     private const int DesiredMaxResponseTime = 5000;
     
     private readonly ILogger<PerformanceMonitorMiddleware> _logger;
-    private readonly IOptionsMonitor<StarfishOptions> _starfishLoggingOptions;
+    private readonly IOptionsMonitor<StarfishOptions> _starfishOptions;
 
     public PerformanceMonitorMiddleware(ILogger<PerformanceMonitorMiddleware> logger, IOptionsMonitor<StarfishOptions> options)
     {
         _logger = logger;
-        _starfishLoggingOptions = options;
+        _starfishOptions = options;
     }
     
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
-        if (_starfishLoggingOptions.CurrentValue.PerformanceMonitorEnabled == false)
+        if (_starfishOptions.CurrentValue.PerformanceMonitorEnabled == false)
         {
             await next.Invoke(context);
             return;
@@ -32,7 +32,7 @@ public class PerformanceMonitorMiddleware : IMiddleware
         var endingTime = Stopwatch.GetTimestamp();
 
         var elapsed = Stopwatch.GetElapsedTime(startingTime, endingTime).TotalMilliseconds;
-        if ( elapsed > DesiredMaxResponseTime)
+        if (elapsed > DesiredMaxResponseTime)
         {
             _logger.LogWarning($"Request took more than 5 seconds to process. Details : {Details(context.Request, (int)elapsed)}");
         }

@@ -107,7 +107,7 @@ public static class ServiceCollectionExtensions
             PeriodInSeconds = 5
         });
         
-        serviceCollection.Configure<StarfishOptions>(configuration.GetSection("StarfishLoggingOptions"));
+        serviceCollection.Configure<StarfishOptions>(configuration.GetSection(nameof(StarfishOptions)));
 
         return serviceCollection;
     }

@@ -52,6 +52,8 @@ public class BankTransactionsControllerV2 : ControllerBase
     [HttpPost]
     public async Task<ActionResult> Add(BankTransaction transaction, CancellationToken ctx)
     {
+        transaction.Date = DateTime.UtcNow;
+        
         await _bankTransactionsService.AddAsync(transaction, ctx);
         return StatusCode((int)HttpStatusCode.Created);
     }
