@@ -11,7 +11,7 @@ builder.Services
     .AddSerilog(builder.Host)
     .AddApiVersioningDependencies()
     .AddStarfishDependencies()
-    .AddStarfishGrpcClient(builder.Configuration)
+    .AddFraudCheckerGrpcClient(builder.Configuration)
     .AddStarfishDatabase(builder.Configuration)
     .AddStarfishConfigurationSource(builder.Configuration)
     .AddStarfishHostedServices(builder.Environment.IsDevelopment());
@@ -48,7 +48,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseProblemDetails();
 
-app.UseMiddleware<RequestLoggerMiddleware>();
+app.UseMiddleware<PerformanceMonitorMiddleware>();
 
 app.UseHttpsRedirection();
 
