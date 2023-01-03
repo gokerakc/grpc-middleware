@@ -12,14 +12,15 @@ using Starfish.Web.Exceptions;
 using Starfish.Web.Middlewares;
 using Hellang.Middleware.ProblemDetails;
 using Serilog;
+using Starfish.Core;
+using Starfish.Infrastructure;
+using Starfish.Infrastructure.Services;
 using Starfish.Web.HostedServices;
-using Starfish.Web.Options;
 
 namespace Starfish.Web.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-
     public static IServiceCollection AddSerilog(this IServiceCollection serviceCollection, ConfigureHostBuilder hostBuilder)
     {
         hostBuilder.UseSerilog((builderContext, _, loggerConfiguration) =>
@@ -51,18 +52,20 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddStarfishDependencies(this IServiceCollection serviceCollection)
     {
-        serviceCollection.AddScoped<IRepository<BankAccount>, BankAccountsRepository>();
-        serviceCollection.AddScoped<IRepository<BankTransaction>, BankTransactionsRepository>();
-        serviceCollection.AddScoped<IBankAccountsService, BankAccountsService>();
-        serviceCollection.AddScoped<IBankTransactionsService, BankTransactionsService>();
+        serviceCollection
+            .AddScoped<IRepository<BankAccount>, BankAccountsRepository>()
+            .AddScoped<IRepository<BankTransaction>, BankTransactionsRepository>()
+            .AddScoped<IBankAccountsService, BankAccountsService>()
+            .AddScoped<IBankTransactionsService, BankTransactionsService>()
+            .AddScoped<IFraudCheckerService, FraudCheckerService>();
         
-        serviceCollection.AddSingleton<RequestLoggerMiddleware>();
+        serviceCollection.AddSingleton<PerformanceMonitorMiddleware>();
 
 
         return serviceCollection;
     }
 
-    public static IServiceCollection AddStarfishGrpcClient(this IServiceCollection serviceCollection, ConfigurationManager configuration)
+    public static IServiceCollection AddFraudCheckerGrpcClient(this IServiceCollection serviceCollection, ConfigurationManager configuration)
     {
         var grpcServiceAddress = configuration.GetConnectionString("GrpcServiceConnection");
         
@@ -70,7 +73,7 @@ public static class ServiceCollectionExtensions
             throw new ArgumentException("Grpc service address is missing.");
         
         using var channel = GrpcChannel.ForAddress(grpcServiceAddress);
-        var requestLoggerClient = new RequestLogger.RequestLoggerClient(channel);
+        var requestLoggerClient = new FraudChecker.FraudCheckerClient(channel);
         serviceCollection.AddSingleton(requestLoggerClient);
 
         return serviceCollection;
@@ -101,11 +104,10 @@ public static class ServiceCollectionExtensions
         {
             OptionsAction = (optionsBuilder) => optionsBuilder.UseSqlServer(connectionString),
             ReloadPeriodically = true,
-            PeriodInSeconds = 5,
-            LoggerFactory = sp.GetRequiredService<ILoggerFactory>()
+            PeriodInSeconds = 5
         });
         
-        serviceCollection.Configure<StarfishLoggingOptions>(configuration.GetSection("StarfishLoggingOptions"));
+        serviceCollection.Configure<StarfishOptions>(configuration.GetSection("StarfishLoggingOptions"));
 
         return serviceCollection;
     }
@@ -126,6 +128,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddStarfishHostedServices(this IServiceCollection serviceCollection, bool isDevelopment)
     {
         serviceCollection.AddHostedService<DatabaseMigrationService>();
+        serviceCollection.AddHostedService<PopulateDefaultSettingsService>();
 
         if (isDevelopment)
         {

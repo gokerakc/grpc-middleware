@@ -2,16 +2,18 @@
 using System.Globalization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Options;
-using Starfish.Web.Options;
+using Starfish.Shared;
 
 namespace Starfish.Web.Middlewares;
 
-public class RequestLoggerMiddleware : IMiddleware
+public class PerformanceMonitorMiddleware : IMiddleware
 {
-    private readonly ILogger<RequestLoggerMiddleware> _logger;
-    private readonly IOptionsMonitor<StarfishLoggingOptions> _starfishLoggingOptions;
+    private const int DesiredMaxResponseTime = 5000;
+    
+    private readonly ILogger<PerformanceMonitorMiddleware> _logger;
+    private readonly IOptionsMonitor<StarfishOptions> _starfishLoggingOptions;
 
-    public RequestLoggerMiddleware(ILogger<RequestLoggerMiddleware> logger, IOptionsMonitor<StarfishLoggingOptions> options)
+    public PerformanceMonitorMiddleware(ILogger<PerformanceMonitorMiddleware> logger, IOptionsMonitor<StarfishOptions> options)
     {
         _logger = logger;
         _starfishLoggingOptions = options;
@@ -19,7 +21,7 @@ public class RequestLoggerMiddleware : IMiddleware
     
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
-        if (_starfishLoggingOptions.CurrentValue.RequestLoggingEnabled == false)
+        if (_starfishLoggingOptions.CurrentValue.PerformanceMonitorEnabled == false)
         {
             await next.Invoke(context);
             return;
@@ -28,11 +30,15 @@ public class RequestLoggerMiddleware : IMiddleware
         var startingTime = Stopwatch.GetTimestamp();
         await next.Invoke(context);
         var endingTime = Stopwatch.GetTimestamp();
-        
-       _logger.LogInformation(message: Message(context.Request, (int)Stopwatch.GetElapsedTime(startingTime, endingTime).TotalMilliseconds));
-    }
 
-    private static string Message(HttpRequest request, int elapsedMs)
+        var elapsed = Stopwatch.GetElapsedTime(startingTime, endingTime).TotalMilliseconds;
+        if ( elapsed > DesiredMaxResponseTime)
+        {
+            _logger.LogWarning($"Request took more than 5 seconds to process. Details : {Details(context.Request, (int)elapsed)}");
+        }
+    }
+    
+    private static string Details(HttpRequest request, int elapsedMs)
     {
         return $$"""
         {
