@@ -6,4 +6,4 @@ docker run --network starfish-net --name starfish-sqlserver -e "ACCEPT_EULA=Y" -
 
 docker build --tag starfish-api:1.0.0 .
 
-docker run -d --network starfish-net --name starfish-api -p 5001:80 starfish-api:1.0.0 -e "ASPNETCORE_ENVIRONMENT=Development"
+docker run -d --network starfish-net --name starfish-api -p 5001:80 starfish-api-new:1.0.0 -e "ASPNETCORE_ENVIRONMENT=Development"

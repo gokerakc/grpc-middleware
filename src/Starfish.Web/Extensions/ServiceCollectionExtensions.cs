@@ -64,8 +64,11 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddStarfishGrpcClient(this IServiceCollection serviceCollection, ConfigurationManager configuration)
     {
-        var grpcServiceAddress = configuration.GetConnectionString("GrpcServiceConnection") ??
-                                 throw new ArgumentException("Grpc service address is missing.");
+        var grpcServiceAddress = configuration.GetConnectionString("GrpcServiceConnection");
+        
+        if (grpcServiceAddress is null || string.Equals(grpcServiceAddress, "<PLACEHOLDER>", StringComparison.InvariantCultureIgnoreCase))
+            throw new ArgumentException("Grpc service address is missing.");
+        
         using var channel = GrpcChannel.ForAddress(grpcServiceAddress);
         var requestLoggerClient = new RequestLogger.RequestLoggerClient(channel);
         serviceCollection.AddSingleton(requestLoggerClient);
