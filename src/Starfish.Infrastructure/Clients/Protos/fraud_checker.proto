@@ -1,0 +1,30 @@
+﻿syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Starfish.Infrastructure";
+
+package fraud_checker;
+
+service FraudChecker {
+  rpc Check (TransactionDetailsRequest) returns (FraudReport);
+}
+
+message TransactionDetailsRequest {
+  string id = 1;
+  string sourceId = 2;
+  string targetId = 3;
+  double amount = 4;
+  google.protobuf.Timestamp utcDate = 5;
+}
+
+message FraudReport {
+  StatusTypes TransactionStatus = 1;
+
+  enum StatusTypes {
+    UNKNOWN = 0;
+    VALID = 1;
+    SUSPICIOUS = 3;
+    FRAUD = 2;
+  }
+}
