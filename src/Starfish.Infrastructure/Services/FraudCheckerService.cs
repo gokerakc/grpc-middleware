@@ -22,7 +22,6 @@ public class FraudCheckerService : IFraudCheckerService
     private static TransactionDetailsRequest Map(BankTransaction transaction) =>
         new TransactionDetailsRequest
         {
-            Id = transaction.Id.ToString(),
             SourceId = transaction.SourceId.ToString(),
             TargetId = transaction.TargetId.ToString(),
             Amount = Convert.ToDouble(transaction.Amount),
