@@ -8,13 +8,13 @@ public class BankTransactionsService : IBankTransactionsService
 {
     private readonly IRepository<BankTransaction> _bankTransactionsRepository;
     private readonly IOptionsMonitor<StarfishOptions> _options;
-    private readonly Lazy<IFraudCheckerService> _fraudCheckerService;
+    private readonly IFraudCheckerService _fraudCheckerService;
 
     public BankTransactionsService(IRepository<BankTransaction> bankTransactionRepository, IFraudCheckerService fraudCheckerService, IOptionsMonitor<StarfishOptions> options)
     {
         _bankTransactionsRepository = bankTransactionRepository;
         _options = options;
-        _fraudCheckerService = new Lazy<IFraudCheckerService>(fraudCheckerService);
+        _fraudCheckerService = fraudCheckerService;
     }
     
     public async Task<List<BankTransaction>> GetAllAsync(CancellationToken ctx) => await _bankTransactionsRepository.GetAllAsync(ctx);
@@ -41,7 +41,7 @@ public class BankTransactionsService : IBankTransactionsService
             return true;
         }
         
-        var result = _fraudCheckerService.Value.Check(transaction);
+        var result = _fraudCheckerService.Check(transaction);
 
         return result switch {
             FraudCheckResult.Suspicious or FraudCheckResult.Fraud => false,

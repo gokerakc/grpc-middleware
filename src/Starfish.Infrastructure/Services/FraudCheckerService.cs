@@ -1,8 +1,6 @@
 ﻿using Google.Protobuf.WellKnownTypes;
-using Microsoft.Extensions.Options;
 using Starfish.Core;
 using Starfish.Core.Models;
-using Starfish.Shared;
 
 namespace Starfish.Infrastructure.Services;
 

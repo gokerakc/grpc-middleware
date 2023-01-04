@@ -11,11 +11,10 @@ service FraudChecker {
 }
 
 message TransactionDetailsRequest {
-  string id = 1;
-  string sourceId = 2;
-  string targetId = 3;
-  double amount = 4;
-  google.protobuf.Timestamp utcDate = 5;
+  string sourceId = 1;
+  string targetId = 2;
+  double amount = 3;
+  google.protobuf.Timestamp utcDate = 4;
 }
 
 message FraudReport {

@@ -1,5 +1,4 @@
 ﻿using System.Text.Json.Serialization;
-using Grpc.Net.Client;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Starfish.Core.Models;
@@ -71,10 +70,11 @@ public static class ServiceCollectionExtensions
         
         if (grpcServiceAddress is null || string.Equals(grpcServiceAddress, "<PLACEHOLDER>", StringComparison.InvariantCultureIgnoreCase))
             throw new ArgumentException("Grpc service address is missing.");
-        
-        using var channel = GrpcChannel.ForAddress(grpcServiceAddress);
-        var requestLoggerClient = new FraudChecker.FraudCheckerClient(channel);
-        serviceCollection.AddSingleton(requestLoggerClient);
+
+        serviceCollection.AddGrpcClient<FraudChecker.FraudCheckerClient>(o =>
+        {
+            o.Address = new Uri(grpcServiceAddress);
+        });
 
         return serviceCollection;
     }
@@ -98,7 +98,6 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddStarfishConfigurationSource(this IServiceCollection serviceCollection,
         ConfigurationManager configuration)
     {
-        var sp = serviceCollection.BuildServiceProvider();
         var connectionString = configuration.GetConnectionString("DefaultConnection");
         configuration.Sources.Add(new SqlServerConfigurationSource
         {
