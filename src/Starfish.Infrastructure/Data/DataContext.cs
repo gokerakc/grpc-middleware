@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Starfish.Core.Models;
+using Starfish.Infrastructure.DTOs;
 using Starfish.Shared;
 
 namespace Starfish.Infrastructure.Data;
@@ -26,36 +26,36 @@ public class DataContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<BankTransaction>()
-            .HasOne<BankAccount>()
+        modelBuilder.Entity<BankTransactionDto>()
+            .HasOne<BankAccountDto>()
             .WithMany()
             .HasForeignKey(x => x.SourceId)
             .OnDelete(DeleteBehavior.ClientCascade);
 
-        modelBuilder.Entity<BankTransaction>()
-            .HasOne<BankAccount>()
+        modelBuilder.Entity<BankTransactionDto>()
+            .HasOne<BankAccountDto>()
             .WithMany()
             .HasForeignKey(x => x.TargetId)
             .OnDelete(DeleteBehavior.ClientCascade);
         
         // Creates BankAccountsHistory table to track changes
-        modelBuilder.Entity<BankAccount>()
+        modelBuilder.Entity<BankAccountDto>()
             .ToTable(name: "BankAccounts", bankAccountsTable =>
             {
                 bankAccountsTable.IsTemporal();
             });
         
         // Creates BankTransactionsHistory table to track changes
-        modelBuilder.Entity<BankTransaction>()
+        modelBuilder.Entity<BankTransactionDto>()
             .ToTable(name: "BankTransactions", bankTransactionsTable =>
             {
                 bankTransactionsTable.IsTemporal();
             });
     }
 
-    public DbSet<BankAccount> BankAccounts { get; set; }
+    public DbSet<BankAccountDto> BankAccounts { get; set; }
     
-    public DbSet<BankTransaction> BankTransactions { get; set; }
+    public DbSet<BankTransactionDto> BankTransactions { get; set; }
     
     public DbSet<StarfishSettings> StarfishSettings { get; set; }
 

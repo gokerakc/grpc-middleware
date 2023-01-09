@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Starfish.Core.Models;
 using Starfish.Infrastructure.Data;
+using Starfish.Infrastructure.DTOs;
 using Starfish.Infrastructure.Repositories;
 
 namespace Starfish.Tests.Repositories;
@@ -29,7 +30,7 @@ public class BankAccountsRepositoryTests
         var result = await _context.BankAccounts.FirstOrDefaultAsync(x => x.Id == id, _ctx);
         
         Assert.NotNull(result);
-        Assert.Equal(result, bankAccount);
+        Assert.Equal((BankAccount)result!, bankAccount);
     }
     
     [Fact]
@@ -52,14 +53,14 @@ public class BankAccountsRepositoryTests
             .ToListAsync(_ctx);
         
         Assert.NotEmpty(result);
-        Assert.Equal(result, bankAccounts);
+        Assert.True(bankAccounts.SequenceEqual(result.Select(x => (BankAccount)x)));
     }
     
     [Fact]
     public async Task Get_ShouldGetItemAsExpected()
     {
         var id = Guid.NewGuid();
-        var bankAccount = new BankAccount { Id= id, AccountName = "John Doe 2", AccountNumber = "99736728", Balance = 0 };
+        var bankAccount = new BankAccountDto { Id= id, AccountName = "John Doe 2", AccountNumber = "99736728", Balance = 0 };
 
         await _context.BankAccounts.AddAsync(bankAccount, _ctx);
         await _context.SaveChangesAsync(_ctx);
@@ -67,14 +68,14 @@ public class BankAccountsRepositoryTests
         var result = await _subject.GetAsync(id, _ctx);
         
         Assert.NotNull(result);
-        Assert.Equal(result, bankAccount);
+        Assert.Equal(result, (BankAccount)bankAccount);
     }
     
     [Fact]
     public async Task Delete_ShouldDeleteItemAsExpected()
     {
         var id = Guid.NewGuid();
-        var bankAccount = new BankAccount { Id= id, AccountName = "John Doe 3", AccountNumber = "11736728", Balance = 0 };
+        var bankAccount = new BankAccountDto { Id= id, AccountName = "John Doe 3", AccountNumber = "11736728", Balance = 0 };
 
         await _context.BankAccounts.AddAsync(bankAccount, _ctx);
         await _context.SaveChangesAsync(_ctx);

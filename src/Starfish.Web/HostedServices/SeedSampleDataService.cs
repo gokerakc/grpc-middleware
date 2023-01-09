@@ -1,5 +1,6 @@
 ﻿using Starfish.Core.Models;
 using Starfish.Infrastructure.Data;
+using Starfish.Infrastructure.DTOs;
 
 namespace Starfish.Web.HostedServices;
 
@@ -7,7 +8,7 @@ public class SeedSampleDataService : IHostedService
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly ILogger<SeedSampleDataService> _logger;
-    private List<BankAccount>? _bankAccounts;
+    private List<BankAccountDto>? _bankAccounts;
 
     public SeedSampleDataService(IServiceProvider serviceProvider, ILogger<SeedSampleDataService> logger)
     {
@@ -40,11 +41,11 @@ public class SeedSampleDataService : IHostedService
     
     private async Task SeedBankAccounts(DataContext dbContext, CancellationToken cancellationToken)
     {
-        _bankAccounts = new List<BankAccount>();
+        _bankAccounts = new List<BankAccountDto>();
 
         for (var i = 0; i < 1000; i++)
         {
-            _bankAccounts.Add(new BankAccount
+            _bankAccounts.Add(new BankAccountDto
             {
                 Id = Guid.NewGuid(),
                 AccountName = $"{_firstnames[Random.Shared.Next(_firstnames.Count)]} {_lastnames[Random.Shared.Next(_lastnames.Count)]}",
@@ -62,13 +63,13 @@ public class SeedSampleDataService : IHostedService
     
     private async Task SeedBankTransactions(DataContext dbContext, CancellationToken cancellationToken)
     {
-        var bankTransactions = new List<BankTransaction>();
+        var bankTransactions = new List<BankTransactionDto>();
 
         var bankAccountIds = _bankAccounts!.Select(x => x.Id).ToList();
 
         for (var i = 0; i < 50_000; i++)
         {
-            bankTransactions.Add(new BankTransaction
+            bankTransactions.Add(new BankTransactionDto
             {
                 SourceId = bankAccountIds[Random.Shared.Next(0, 500)],
                 TargetId = bankAccountIds[Random.Shared.Next(500, 999)],

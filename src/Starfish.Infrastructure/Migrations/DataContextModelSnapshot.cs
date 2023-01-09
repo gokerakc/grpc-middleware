@@ -22,7 +22,7 @@ namespace Starfish.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Starfish.Core.Models.BankAccount", b =>
+            modelBuilder.Entity("Starfish.Infrastructure.DTOs.BankAccountDto", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -65,7 +65,7 @@ namespace Starfish.Infrastructure.Migrations
                             }));
                 });
 
-            modelBuilder.Entity("Starfish.Core.Models.BankTransaction", b =>
+            modelBuilder.Entity("Starfish.Infrastructure.DTOs.BankTransactionDto", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -130,15 +130,15 @@ namespace Starfish.Infrastructure.Migrations
                     b.ToTable("StarfishSettings");
                 });
 
-            modelBuilder.Entity("Starfish.Core.Models.BankTransaction", b =>
+            modelBuilder.Entity("Starfish.Infrastructure.DTOs.BankTransactionDto", b =>
                 {
-                    b.HasOne("Starfish.Core.Models.BankAccount", null)
+                    b.HasOne("Starfish.Infrastructure.DTOs.BankAccountDto", null)
                         .WithMany()
                         .HasForeignKey("SourceId")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
-                    b.HasOne("Starfish.Core.Models.BankAccount", null)
+                    b.HasOne("Starfish.Infrastructure.DTOs.BankAccountDto", null)
                         .WithMany()
                         .HasForeignKey("TargetId")
                         .OnDelete(DeleteBehavior.ClientCascade)

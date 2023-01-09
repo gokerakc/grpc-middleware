@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Starfish.Core.Models;
 using Starfish.Infrastructure.Data;
+using Starfish.Infrastructure.DTOs;
 using Starfish.Infrastructure.Repositories;
 
 namespace Starfish.Tests.Repositories;
@@ -32,7 +33,7 @@ public class BankTransactionsRepositoryTests
         var result = await _context.BankTransactions.FirstOrDefaultAsync(x => x.Id == id, _ctx);
         
         Assert.NotNull(result);
-        Assert.Equal(result, bankTransaction);
+        Assert.Equal((BankTransaction)result!, bankTransaction);
     }
 
     [Fact]
@@ -55,14 +56,14 @@ public class BankTransactionsRepositoryTests
             .ToListAsync(_ctx);
 
         Assert.NotEmpty(result);
-        Assert.Equal(result, bankTransactions);
+        Assert.True(bankTransactions.SequenceEqual(result.Select(x => (BankTransaction)x)));
     }
 
     [Fact]
     public async Task Get_ShouldGetItemAsExpected()
     {
         var id = Guid.NewGuid();
-        var bankTransaction = new BankTransaction { Id= id, TargetId = _targetId, SourceId = _sourceId, Amount = 500, Description = "Test desc 02"};
+        var bankTransaction = new BankTransactionDto { Id= id, TargetId = _targetId, SourceId = _sourceId, Amount = 500, Description = "Test desc 02"};
 
         await _context.BankTransactions.AddAsync(bankTransaction, _ctx);
         await _context.SaveChangesAsync(_ctx);
@@ -70,14 +71,14 @@ public class BankTransactionsRepositoryTests
         var result = await _subject.GetAsync(id, _ctx);
         
         Assert.NotNull(result);
-        Assert.Equal(result, bankTransaction);
+        Assert.Equal(result, (BankTransaction)bankTransaction);
     }
     
     [Fact]
     public async Task Delete_ShouldDeleteItemAsExpected()
     {
         var id = Guid.NewGuid();
-        var bankTransaction = new BankTransaction { Id= id, TargetId = _targetId, SourceId = _sourceId, Amount = 100, Description = "Test desc 03"};
+        var bankTransaction = new BankTransactionDto { Id= id, TargetId = _targetId, SourceId = _sourceId, Amount = 100, Description = "Test desc 03"};
 
         await _context.BankTransactions.AddAsync(bankTransaction, _ctx);
         await _context.SaveChangesAsync(_ctx);
