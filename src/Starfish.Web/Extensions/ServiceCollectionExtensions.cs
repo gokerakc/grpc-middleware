@@ -127,7 +127,6 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddStarfishHostedServices(this IServiceCollection serviceCollection, bool isDevelopment)
     {
         serviceCollection.AddHostedService<DatabaseMigrationService>();
-        serviceCollection.AddHostedService<PopulateDefaultSettingsService>();
 
         if (isDevelopment)
         {
