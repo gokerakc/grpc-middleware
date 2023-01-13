@@ -12,12 +12,12 @@ Includes:
 - Custom configuration provider (Read settings from database)
 - BenchmarkDotNet
 - Docker files
+- Rate limiting
 - ...
 
 And will include:
 - GitHub actions
 - IAC (Azure or AWS)
-- Rate limiting
 
 ![project-starfish](./starfish.png "Project Starfish")
 
