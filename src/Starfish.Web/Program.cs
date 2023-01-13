@@ -46,6 +46,8 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.UseStarfishRateLimiting();
+
 app.UseProblemDetails();
 
 app.UseMiddleware<PerformanceMonitorMiddleware>();
