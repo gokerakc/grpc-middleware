@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.RateLimiting;
 using Starfish.Core.Models;
 using Starfish.Core.Services;
 using Starfish.Web.Controllers.v1;
@@ -11,7 +10,6 @@ namespace Starfish.Web.Controllers.v2;
 [ApiVersion("2.0")]
 [Tags("Bank Accounts")]
 [Route("bank-accounts")]
-[EnableRateLimiting("standard")]
 public class BankAccountsControllerV2 : ControllerBase
 {
     private readonly IBankAccountsService _bankAccountsService;

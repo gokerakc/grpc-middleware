@@ -8,7 +8,13 @@
   </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="BenchmarkDotNet" Version="0.13.3" />        
+        <PackageReference Include="BenchmarkDotNet" Version="0.13.3" />
+        <PackageReference Include="Grpc.AspNetCore.Server.ClientFactory" Version="2.51.0" />
+        <PackageReference Include="Grpc.Net.ClientFactory" Version="2.51.0" />
+        <PackageReference Include="Grpc.Tools" Version="2.51.0">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>        
         <PackageReference Include="Hellang.Middleware.ProblemDetails" Version="6.5.1" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
@@ -16,11 +22,21 @@
         <PackageReference Include="Serilog" Version="2.12.0" />
         <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
-        <PackageReference Include="System.Threading.RateLimiting" Version="7.0.0" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Starfish.Core\Starfish.Core.csproj" />
       <ProjectReference Include="..\Starfish.Infrastructure\Starfish.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Protobuf Include="Clients\Protos\rate_limiter.proto">
+            <GrpcServices>Client</GrpcServices>
+            <Access>Public</Access>
+            <ProtoCompile>True</ProtoCompile>
+            <CompileOutputs>True</CompileOutputs>
+            <OutputDir>obj\Release\net7.0\</OutputDir>
+            <Generator>MSBuild:Compile</Generator>
+        </Protobuf>
     </ItemGroup>
 </Project>

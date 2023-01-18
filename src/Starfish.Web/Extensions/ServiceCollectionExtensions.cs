@@ -15,6 +15,7 @@ using Starfish.Core;
 using Starfish.Infrastructure;
 using Starfish.Infrastructure.Services;
 using Starfish.Web.HostedServices;
+using Starfish.Web.Services;
 
 namespace Starfish.Web.Extensions;
 
@@ -56,15 +57,17 @@ public static class ServiceCollectionExtensions
             .AddScoped<IRepository<BankTransaction>, BankTransactionsRepository>()
             .AddScoped<IBankAccountsService, BankAccountsService>()
             .AddScoped<IBankTransactionsService, BankTransactionsService>()
-            .AddScoped<IFraudCheckerService, FraudCheckerService>();
+            .AddScoped<IFraudCheckerService, FraudCheckerService>()
+            .AddScoped<IRateLimiterService, RateLimiterService>();
         
         serviceCollection.AddSingleton<PerformanceMonitorMiddleware>();
+        serviceCollection.AddScoped<RateLimiterMiddleware>();
 
 
         return serviceCollection;
     }
 
-    public static IServiceCollection AddFraudCheckerGrpcClient(this IServiceCollection serviceCollection, ConfigurationManager configuration)
+    public static IServiceCollection AddStarfishGrpcClients(this IServiceCollection serviceCollection, ConfigurationManager configuration)
     {
         var grpcServiceAddress = configuration.GetConnectionString("GrpcServiceConnection");
         
@@ -75,10 +78,15 @@ public static class ServiceCollectionExtensions
         {
             o.Address = new Uri(grpcServiceAddress);
         });
+        
+        serviceCollection.AddGrpcClient<RateLimiter.RateLimiterClient>(o =>
+        {
+            o.Address = new Uri(grpcServiceAddress);
+        });
 
         return serviceCollection;
     }
-
+    
     public static IServiceCollection AddStarfishDatabase(this IServiceCollection serviceCollection,
         ConfigurationManager configuration)
     {

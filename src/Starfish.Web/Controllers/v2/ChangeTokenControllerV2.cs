@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.RateLimiting;
 using Starfish.Core.Resources;
 
 namespace Starfish.Web.Controllers.v2;
@@ -9,7 +8,6 @@ namespace Starfish.Web.Controllers.v2;
 [ApiVersion("2.0")]
 [Tags("Change Token")]
 [Route("change-token", Name = "ChangeTokenName")]
-[EnableRateLimiting("strict")]
 public class ChangeTokenControllerV2 : ControllerBase
 {
     /// <summary>

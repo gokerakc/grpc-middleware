@@ -6,6 +6,7 @@ namespace Starfish.Web.Extensions;
 
 public static class ApplicationExtensions
 {
+    [Obsolete("Rate limiting logic moved to the GRPC service.")]
     public static WebApplication UseStarfishRateLimiting(this WebApplication app)
     {
         app.UseRateLimiter(new RateLimiterOptions()
