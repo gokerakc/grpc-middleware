@@ -69,7 +69,7 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddStarfishGrpcClients(this IServiceCollection serviceCollection, ConfigurationManager configuration)
     {
-        var grpcServiceAddress = configuration.GetConnectionString("GrpcServiceConnection");
+        var grpcServiceAddress = configuration.GetConnectionString("GrpcServerConnection");
         
         if (grpcServiceAddress is null || string.Equals(grpcServiceAddress, "<PLACEHOLDER>", StringComparison.InvariantCultureIgnoreCase))
             throw new ArgumentException("Grpc service address is missing.");
