@@ -1,0 +1,23 @@
+version: '3.9'
+
+services:
+  starfish-app:
+    build: .
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "5001:80"
+    depends_on:
+      - starfish-sqlserver
+      - starfish-grpc-server
+  starfish-sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+      - "1433:1433"
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=P455w0rd
+  starfish-grpc-server:
+    build: ../starfish-grpc-server
+    ports:
+      - "5003:80"
