@@ -2,7 +2,7 @@
 
 namespace Starfish.Core.Resources;
 
-public class GuestListSource : IDisposable
+public static class GuestListSource
 {
     private static readonly HashSet<string> Guests = new()
     {
@@ -60,6 +60,7 @@ public class GuestListSource : IDisposable
 
         _watcherId = watcherId;
         
+        _cancellationTokenSource?.Dispose();
         _cancellationTokenSource = new CancellationTokenSource();
 
         var changeToken =  new CancellationChangeToken(_cancellationTokenSource.Token);
@@ -70,10 +71,5 @@ public class GuestListSource : IDisposable
     private static void Changed()
     {
         _cancellationTokenSource?.Cancel();
-    }
-
-    public void Dispose()
-    {
-        _cancellationTokenSource?.Dispose();
     }
 }
