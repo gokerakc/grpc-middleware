@@ -1,5 +1,5 @@
+using Asp.Versioning.ApiExplorer;
 using Hellang.Middleware.ProblemDetails;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Starfish.Web.Extensions;
 using Starfish.Web.Middlewares;
 using Starfish.Web.Options;

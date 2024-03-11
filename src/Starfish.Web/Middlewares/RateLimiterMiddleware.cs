@@ -24,7 +24,7 @@ public class RateLimiterMiddleware : IMiddleware
         else
         {
             context.Response.StatusCode = 429; // Too many requests;
-            context.Response.Headers.Add("Content-Type", "application/json");
+            context.Response.Headers.Append("Content-Type", "application/json");
             await context.Response.WriteAsync(JsonSerializer.Serialize(new ProblemDetails
             {
                 Title = "Too many requests",

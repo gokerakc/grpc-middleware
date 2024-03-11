@@ -1,5 +1,4 @@
 ﻿using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Starfish.Core.Models;
 using Starfish.Core.Services;
@@ -16,6 +15,7 @@ using Starfish.Infrastructure;
 using Starfish.Infrastructure.Services;
 using Starfish.Web.HostedServices;
 using Starfish.Web.Services;
+using Asp.Versioning;
 
 namespace Starfish.Web.Extensions;
 
@@ -34,19 +34,18 @@ public static class ServiceCollectionExtensions
     {
         serviceCollection.AddApiVersioning(opt =>
         {
-            opt.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1,0);
+            opt.DefaultApiVersion = new ApiVersion(1, 0);
             //opt.AssumeDefaultVersionWhenUnspecified = true;
             opt.ReportApiVersions = true;
             opt.ApiVersionReader = ApiVersionReader.Combine(new UrlSegmentApiVersionReader(),
                 new HeaderApiVersionReader("x-api-version"),
                 new MediaTypeApiVersionReader("x-api-version"));
-        });
-
-        serviceCollection.AddVersionedApiExplorer(setup =>
+        }).AddApiExplorer((opt =>
         {
-            setup.GroupNameFormat = "'V'VVV";
-            setup.SubstituteApiVersionInUrl = true;
-        });
+            opt.GroupNameFormat = "'V'VVV";
+            opt.SubstituteApiVersionInUrl = true;
+        }));
+
         return serviceCollection;
     }
 
