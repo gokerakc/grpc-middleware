@@ -30,13 +30,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Protobuf Include="Clients\Protos\rate_limiter.proto">
-            <GrpcServices>Client</GrpcServices>
-            <Access>Public</Access>
-            <ProtoCompile>True</ProtoCompile>
-            <CompileOutputs>True</CompileOutputs>
-            <OutputDir>obj\Release\net7.0\</OutputDir>
-            <Generator>MSBuild:Compile</Generator>
-        </Protobuf>
+      <Protobuf Include="Clients\Protos\rate_limiter.proto" />
     </ItemGroup>
 </Project>

@@ -10,5 +10,5 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0 as runtime
 WORKDIR /app
 COPY --from=build-env /app/output .
 
-EXPOSE 80
+EXPOSE 8080
 ENTRYPOINT ["dotnet", "Starfish.Web.dll"]

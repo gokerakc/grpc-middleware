@@ -6,7 +6,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
-      - "5001:80"
+      - "5001:8080"
     depends_on:
       - starfish-sqlserver
       - starfish-grpc-server
@@ -19,5 +19,7 @@ services:
       - MSSQL_SA_PASSWORD=P455w0rd
   starfish-grpc-server:
     build: ../starfish-grpc-server
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
     ports:
-      - "5003:80"
+      - "5003:8080"
