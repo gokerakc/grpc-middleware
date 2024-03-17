@@ -5,6 +5,8 @@ services:
     build: .
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=starfish-sqlserver;Database=starfish-db;User Id=sa;Password=P455w0rd; TrustServerCertificate=True
+      - ConnectionStrings__GrpcServerConnection=http://starfish-grpc-server:8080
     ports:
       - "5001:8080"
     depends_on:
